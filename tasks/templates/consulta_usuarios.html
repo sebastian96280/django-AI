@@ -1,0 +1,71 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Usuarios /</span> Consultas
+</h4>
+<div class="card">
+    <h5 class="card-header">Consultar Usuarios</h5>
+    <div class="card-body">
+        {% if mensaje%}
+        <div class="alert alert-success" role="alert">
+            {{mensaje}}
+        </div>
+        {% endif %}
+        <div class="card-datatable table-responsive">
+            <table class="dt-responsive table-borderless dataTable dtr-column collapsed" id="myTable">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Fecha de Creación</th>
+                        <th>Nombre Usuario</th>
+                        <th>Correo</th>
+                        <th>Esta Activo?</th>
+                        <th>Es Administrador?</th>
+
+                        <th>Nombre Completo</th>
+                        <th>Tipo de Identificación</th>
+                        <th>Número de Identificación</th>
+                        <th>Area o Departamento</th>
+                        <th>Cargo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los registros de la tabla -->
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{usuario.id}}</td>
+                        <td>{{usuario.user.date_joined}}</td>
+                        <td>{{usuario.user.username}}</td>
+                        <td>{{usuario.user.email}}</td>
+                        <td>{{usuario.user.is_active|yesno:"Sí,No"}}</td>
+                        <td>{{usuario.user.is_superuser|yesno:"Sí,No"}}</td>
+                        <td>{{usuario.nombre_completo}}</td>
+                        <td>{{usuario.id_documento.nombre_tipo}}</td>
+                        <td>{{usuario.numero_identificacion}}</td>
+                        <td>{{usuario.id_area.nombre_area}}</td>
+                        <td>{{usuario.cargo}}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'modificar_usuario' usuario.id %}"><i
+                                            class="bx bx-edit-alt me-1"></i>Editar</a>
+                                    <a class="dropdown-item" href="{% url 'restabler_contrasena' usuario.user_id %}"><i
+                                            class="bx bxs-key me-1"></i>Restabler contraseña</a>
+                                    <a class="dropdown-item" href="{% url 'activar_desactivar_usuario' usuario.id %}"><i
+                                            class="bx bxs-user-circle me-1"></i>{{usuario.user.is_active|yesno:'Desactivar,Activar'}}</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

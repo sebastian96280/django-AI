@@ -1,0 +1,74 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Solicitudes /</span> Radicar
+</h4>
+<div class="row mb-4">
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Radicar Solicitud</h5>
+            <div class="card-body">
+                {% if confirmacion%}
+                <div class="alert alert-success" role="alert">
+                    {{confirmacion}}
+                </div>
+                {% endif %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!--{{form.as_p}}-->
+                    {% for field in form %}
+                    <p id="p_{{ field.auto_id }}">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary me-2">
+                        <span class="tf-icons bx bx-list-check me-1"></span> Radicar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Browser Default</h5>
+            <div class="card-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        miFuncion();
+    });
+
+    function miFuncion() {
+        var contenidoField = document.getElementById("p_id_mensaje");
+        var adjuntoField = document.getElementById("p_id_archivo");
+        contenidoField.style.display = "none";
+        adjuntoField.style.display = "none";
+
+    }
+    function toggleFields() {
+        var opcion = document.getElementById("id_id_nombre_formato").value;
+        var contenidoField = document.getElementById("p_id_mensaje");
+        var adjuntoField = document.getElementById("p_id_archivo");
+        
+
+        if (opcion === "1") {
+            contenidoField.style.display = "block";
+            adjuntoField.style.display = "none";
+        } else if (opcion === "2") {
+            contenidoField.style.display = "none";
+            adjuntoField.style.display = "block";
+        } else if (opcion == "") {
+            contenidoField.style.display = "none";
+            adjuntoField.style.display = "none";
+        }
+    }
+</script>
+
+{% endblock %}

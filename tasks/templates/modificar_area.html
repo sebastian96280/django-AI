@@ -1,0 +1,31 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Areas o Departamentos /</span> Modificar
+</h4>
+<div class="row mb-4">
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Modificar Areas o Departamentos</h5>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <p>
+                        <label for="id_nombre_area">Nombre area:</label>
+                        <input type="text" name="nombre_area" class="form-control"
+                            placeholder="Nombre del area o departamento" maxlength="100" required="" id="id_nombre_area"
+                            value="{{area.nombre_area}}">
+                    </p>
+                    <button type="submit" class="btn btn-primary me-2">
+                        <span class="tf-icons bx bxs-edit-alt me-1"></span> Modificar Area o Departamento
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación Solicitudes Area Jurídica</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script>
+    <!-- Estilos personalizados -->
+    <style>
+        body {
+            background-color: #003168;
+            color: #fff;
+        }
+
+        .form-container {
+            background-color: #041026;
+            color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-control {
+            background-color: #041026;
+            color: #fff;
+            border-color: #ff9800;
+        }
+
+        .btn {
+            background-color: #ff9800;
+            color: #041026;
+        }
+
+        .navbar {
+            background-color: #041026;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg " >
+        {% if user.is_authenticated %}
+        <a href="/consultarSolicitud/">
+            <img src="https://universitariadecolombia.edu.co/wp-content/uploads/2022/03/Logo-UniversitariadeColombia.png" alt="Home">
+        </a>
+        {% else %}
+        <a href="/">
+            <img src="https://universitariadecolombia.edu.co/wp-content/uploads/2022/03/Logo-UniversitariadeColombia.png" alt="Home">
+        </a>
+        {% endif %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <!--
+                <li class="nav-item">
+                    <a class="nav-link" href="/tasks">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tasks/create">Create Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/creaTarea"> crear area de trabajo</a>
+                </li>-->
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/tiposDocumento">Consultar tipos de Documento</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/tiposSolicitudes">Consultar tipos de solicitudes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/areas">Consultar Areas</a>
+                </li>                              
+                <li class="nav-item">
+                    <a class="nav-link" href="/consultarSolicitud">Consultar solicitudes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/creaEstadoS"> crear estado de la solicitud</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/creaEstadoU"> crear estado del usuario</a>
+                </li>                
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="/CrearActivo">Crear estado Activo</a>
+                </li>
+                
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{user.username}}
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/signup">Signup</a>
+                        <a class="dropdown-item" href="/creaUsuario">creaUsuario</a>
+                        <a class="dropdown-item" href="/logout">Logout</a>
+                    </div>
+                </div>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Radicar solicitud</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Consultar Radicado</a>
+                </li>                
+                <li class="nav-item">
+                    <a class="nav-link" href="/signin"> Inicio de Sesión</a>
+                </li>
+                
+                {% endif %}
+                                
+            </ul>
+        </div>
+    </nav>
+    <br>
+    <br>
+    {% block contect%}
+
+    {% endblock %}
+    <!-- Vincular jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
+
+<script>
+    ClassicEditor
+        .create( document.querySelector( '#txtDescripcion' ) )
+        .catch( error => {
+        console.error( error );
+        } );
+    </script>

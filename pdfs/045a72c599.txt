@@ -1,0 +1,2148 @@
+universidad politécnica
+de madrid
+
+escuela técnica superior de
+
+ingenieros informáticos
+
+grado en ingeniería informática
+
+trabajo fin de grado
+desarrollo de un sistema de
+
+clasificación documental mediante ocr
+y aprendizaje profundo
+
+autor daniel garcía rodríguez
+
+tutora antonio jesús diaz honrubia
+
+madrid enero
+
+este trabajo fin de grado se ha depositado en la etsi informáticos de la
+universidad politécnica de madrid para su defensa
+
+trabajo fin de grado
+
+grado en ingeniería informática
+
+título desarrollo de un sistema de clasificación documental mediante ocr
+y aprendizaje profundo
+
+enero 
+
+autor daniel garcía rodríguez
+
+tutor
+antonio jesús diaz honrubia departamento de lenguajes y sistemas
+informáticos e ingeniería de software
+
+etsi informáticos
+universidad politécnica de madrid
+
+soluciones existentes y tecnologías
+empleadas
+
+en este capítulo se van a estudiar los tipos de documentos que cubrirá la
+versión final del modelo y qué vamos a utilizar para ello
+
+ clasificador de documentos registrados en el eni
+
+para esta primera versión del modelo se requiere una demostración de su
+potencial antes de invertir más recursos en la obtención de otros muchos más
+tipos documentales para ponerlo en marcha
+
+dichos documentos son reconocidos por el esquema nacional de
+interoperabilidad ent y se diferencia en tipos diferentes de documentos
+
+tipos de documentos
+
+documentos administrativos
+
+ resolución documento oficial que establece decisiones o disposiciones
+administrativas
+
+ acuerdo documento que refleja el consentimiento o decisión tomada por
+una entidad o entidades
+
+ contrato acuerdo legal entre dos o más partes que establece obligaciones
+y derechos
+
+ convenio acuerdo formal entre partes que establece compromisos o
+condiciones
+
+ declaración documento que expresa una posición oficial una
+manifestación de voluntad o una información específica
+
+ comunicación escrito formal que transmite información relevante
+dentro de una entidad o entre entidades
+
+documentos de transmisión
+
+ notificación documento oficial que informa a una persona o entidad
+sobre una acción o situación
+
+ publicación documento que comunica información de interés general al
+público
+
+ acuse de recibo confirmación escrita de haber recibido un documento o
+información
+
+documentos de constancia
+
+ acta registro escrito de lo discutido o acordado en una reunión sesión
+o acto
+
+certificado documento que acredita la autenticidad o veracidad de algo
+
+diligencia anotación oficial que se hace en un documento para constatar
+un hecho
+
+documentos de juicio
+
+ informe documento que presenta información detallada y análisis sobre
+un tema específico
+
+documentos de ciudadano
+
+solicitud escrito mediante el cual una persona solicita algo a una
+entidad
+
+ denuncia comunicación escrita en la que se informa sobre una
+irregularidad o falta
+
+ alegación escrito en el que se argumenta o defiende una posición frente
+a algo
+
+ recursos documento que impulsa una revisión o reconsideración de una
+decisión
+
+ comunicación ciudadano escrito que transmite inquietudes o
+sugerencias de un ciudadano
+
+ factura documento que detalla los bienes o servicios adquiridos y su
+coste
+
+ otros incautados documentos incautados o relacionados con
+incautaciones que no se clasifican fácilmente en las categorías anteriores
+
+el esquema nacional de interoperabilidad eni es un marco normativo y
+técnico establecido en españa que regula la interoperabilidad entre las
+administraciones públicas su objetivo principal es facilitar la cooperación el
+intercambio de información y la prestación de servicios entre los distintos
+organismos y entidades gubernamentales a nivel nacional autonómico y local
+
+el eni establece principios políticas y estándares que permiten a las diferentes
+entidades gubernamentales compartir datos documentos y servicios de manera
+eficiente y segura define pautas para la creación y gestión de documentos
+electrónicos asegurando la integridad autenticidad accesibilidad y
+conservación de la información
+
+además el eni promueve la homogeneización de los procedimientos
+administrativos facilitando la interoperabilidad de los sistemas de información
+y la comunicación entre las distintas administraciones esto garantiza que la
+información sea accesible y utilizable por todas las entidades públicas
+mejorando la eficiencia y la calidad de los servicios prestados a los ciudadanos
+y empresas
+
+en resumen el eni constituye un marco regulatorio esencial en españa para
+asegurar la armonización y la compatibilidad de los sistemas de información y
+comunicación entre las administraciones públicas con el fin de promover la
+colaboración eficiente y efectiva entre ellas
+
+esta demo será planteada con de estos tipos de documentos y la muestra
+de datos ha sido obtenida de kaggle y de la base de datos de la empresa donde
+he recopilado más de documentos de tipo pdf etiquetados de los primeros
+tipos de la lista resolución acuerdo contrato convenio y declaración
+
+estos datos proporcionan una base sólida para el entrenamiento y la validación
+del modelo permitiendo así una evaluación exhaustiva de su capacidad para
+clasificar diferentes tipos de documentos y valorar su precisión y eficacia
+
+ tecnologías y herramientas utilizadas
+
+se detallan las diversas bibliotecas y herramientas que forman parte del entorno
+de desarrollo del proyecto la lista incluye bibliotecas de python con sus
+respectivas versiones y otras herramientas específicas para el procesamiento de
+
+datos la manipulación de documentos y la implementación de modelos de
+aprendizaje automático
+
+abslpy
+astor
+astunparse
+cachetools
+certifi
+charsetnormalizer
+cycler
+deskew
+flatbuffers
+gast
+googleauth
+googleauthoauthlib
+googlepasta
+grpcio
+hpy
+
+idna
+
+imageio
+importlibmetadata
+imutils
+joblib
+keras
+kerasapplications
+keraspreprocessing
+kiwisolver
+libclang
+lxml
+markdown
+markupsafe
+matplotlib
+networkx
+numpy
+oauthlib
+opencvpython
+opteinsum
+
+packaging
+
+pdfimage
+pillow
+protobuf
+pyasn
+pyasnmodules
+pyparsing
+pytesseract
+pythondateutil
+pythondocx
+pywavelets
+pyyaml
+requests
+requestsoauthlib
+rsa
+scikitimage
+scikitlearn
+scipy
+
+shapely
+
+six
+stopwords
+tensorboard
+tensorboarddataserver
+tensorboardpluginwit
+tensorflow
+tensorflowestimator
+tensorflowiogcsfilesystem
+termcolor
+tifffile
+typingextensions
+urllib
+werkzeug
+wrapt
+
+zipp
+
+desarrollo del clasificador de documentos
+
+en este capítulo se detallan aspectos más técnicos como el diseño a nivel global
+de la aplicación y su posterior implementación así como el análisis de requisitos
+y las tecnologías empleadas en el desarrollo
+
+ análisis de requisitos
+
+en esta sección se detallan los requisitos funcionales y no funcionales del
+sistema así como los casos de uso que estructuran las interacciones entre el
+usuario y el sistema de clasificación de documentos
+
+ requisitos funcionales
+los requisitos funcionales delinean las acciones y funcionalidades específicas
+que el sistema debe cumplir para satisfacer las necesidades del usuario
+
+ conversión de pdf a imagen el sistema tiene la capacidad de
+transformar documentos en formato pdf a imágenes para permitir la
+posterior extracción de datos a través de técnicas de ocr
+reconocimiento óptico de caracteres
+
+ extracción de datos mediante reconocimiento óptico de caracteres
+ocr el programa realiza la extracción de texto a partir de imágenes de
+documentos utilizando técnicas de ocr convirtiendo así los documentos
+a un formato legible y procesable
+
+ clasificación de documentos el software clasifica los documentos en
+categorías predefinidas utilizando los modelos entrenados asigna a
+cada documento una categoría específica basada en su contenido y
+características extraídas durante el procesamiento
+
+ requisitos no funcionales
+estos requisitos describen las características que definen la calidad y el
+comportamiento esperado del sistema
+
+eficiencia
+
+el sistema debe ser diseñado desde cero para garantizar una ejecución eficiente
+en términos de tiempo y recursos para las operaciones de lectura extracción
+transformación y predicción de documentos se busca minimizar el consumo de
+recursos y optimizar el rendimiento en todas las fases del procesamiento
+
+precisión
+
+se requiere que el sistema logre niveles de precisión significativos con una
+confianza adecuada desde el principio el diseño inicial debe incorporar
+enfoques robustos para garantizar la precisión en la clasificación de
+
+documentos sin depender de mejoras posteriores la meta es alcanzar un nivel
+aceptable de precisión sin comprometer la integridad de las operaciones
+
+escalabilidad
+
+la arquitectura del sistema debe ser inherentemente escalable permitiendo el
+procesamiento eficiente de conjuntos de datos crecientes desde el inicio se
+busca que la aplicación sea capaz de manejar un aumento en la carga de trabajo
+y facilitar futuras expansiones sin perder eficiencia en el procesamiento de
+documentos
+
+diseño del clasificador propuesto
+en este apartado se analizan el flujo de la aplicación tal y como se muestra en
+la figura y los pasos que sigue el programa
+
+conjunto de datos
+
+preprocesamiento
+de
+
+imágenes
+
+documenthandierpngpy
+
+redneuronal py
+
+clasificador py
+
+modelo
+
+figura diagrama de flujo de la aplicación a nivel global
+
+lectura y extracción de características de los documentos
+
+la primera etapa implica la lectura de documentos en formato png que
+anteriormente eran archivos pdf pertenecientes a nuestro conjunto de datos
+estos archivos han pasado por una transformación utilizando la herramienta
+pdfimage para convertirlos en imágenes
+
+tras la fase de transformación se lleva a cabo un paso crucial de
+preprocesamiento de las imágenes este proceso tiene lugar antes de la
+aplicación del reconocimiento óptico de caracteres ocr y se centra en
+optimizar la calidad y la legibilidad de las imágenes entre las técnicas de
+preprocesamiento empleadas se incluyen ajustes de contraste normalización
+de iluminación y eliminación de posibles ruidos visuales
+
+el objetivo principal del preprocesamiento es mejorar la calidad de las imágenes
+resultantes facilitando así una interpretación más efectiva por parte del ocr
+este enfoque contribuye a garantizar una extracción precisa de información
+textual durante la etapa subsiguiente de reconocimiento de caracteres lo que
+a su vez mejora la calidad global del proceso de clasificación
+
+una vez completada la fase de preprocesamiento de imágenes se procede a la
+aplicación del reconocimiento óptico de caracteres ocr sobre los archivos en
+formato png este paso es esencial para convertir las representaciones
+visuales de los documentos en información textual comprensible la salida de
+este proceso se traduce en archivos de texto txt que contienen la transcripción
+de palabras frases y contenido textual presente en las imágenes
+
+una vez transformados los archivos y aplicado el ocr se procede a extraer
+características específicas de cada imagen estas características incluyen
+aspectos cuantitativos como el número de palabras figuras tablas y la
+densidad del contenido visualizado en la imagen estos datos proporcionan una
+base de datos adicional que enriquece el proceso de clasificación permitiendo
+un análisis más detallado y preciso de cada documento
+
+transformación a representación bag of words
+
+la siguiente etapa es la transformación de los documentos a la representación
+conocida como bag of words bow esta técnica permite convertir textos en
+vectores numéricos representativos donde cada elemento representa la
+frecuencia o presencia de una palabra en un documento
+
+este proceso se inicia con la tokenización de los textos separándolos en
+unidades más pequeñas como palabras o frases luego se cuenta la frecuencia
+de aparición de cada palabra en los documentos utilizando la librería
+countvectorizer posteriormente se realiza la transformación de la frecuencia
+de palabras a frecuencia inversa utilizando el tfidftransformer esto resulta en
+una matriz donde las filas representan los documentos y las columnas
+representan las palabras aprendidas a partir del modelo bow de esto se
+encarga el script documenthandlerpngpy
+
+formación del conjunto de entrenamiento definitivo
+
+en esta fase se consolida el conjunto de entrenamiento final la matriz
+generada anteriormente con la representación bow se amplía al agregar las
+características específicas de los documentos extraídas previamente esto
+resulta en una nueva matriz con un número de filas equivalente al número de
+documentos y un número de columnas compuesto por las palabras aprendidas
+
+en el modelo bow junto con las características previamente extraídas número
+de palabras figuras tablas y densidad
+
+creación y entrenamiento de la red neuronal
+
+la parte central del proceso es la creación y entrenamiento de la red neuronal
+un componente fundamental en la clasificación de documentos para este
+propósito se construye una red neuronal con múltiples capas lo que permite
+modelar relaciones más complejas entre los datos esta red está compuesta por
+una capa de entrada una o más capas intermedias y una capa de salida
+
+en la capa de salida se genera un vector donde una posición específica contiene
+el valor y el resto de posiciones tienen el valor representando así la categoría
+predicha por la red neuronal para cada documento durante el entrenamiento
+la red neuronal es alimentada con la matriz del conjunto de entrenamiento junto
+con un vector que contiene las categorías de cada documento este proceso
+permite que la red aprenda y ajuste sus pesos y parámetros internos para
+realizar predicciones precisas en la fase de test
+
+predicción de documentos con el modelo entrenado
+
+una vez que la red neuronal ha sido entrenada con éxito se procede a realizar
+predicciones sobre un conjunto de documentos de test para esto se lleva a
+cabo una serie de pasos que incluyen la lectura y transformación de los
+documentos de test en la representación bow utilizando los modelos
+previamente entrenados la red neuronal procesa estos documentos y genera
+una matriz de salidas con dimensiones correspondientes al número de
+documentos de test y categorías disponibles
+
+es importante destacar que la red neuronal utiliza una función de activación
+sigmoide lo que significa que las salidas no contienen exclusivamente valores
+binarios o sino valores decimales en el rango de a estos valores
+representan la probabilidad de pertenencia del documento a una determinada
+categoría siendo la categoría predicha aquella con la probabilidad más alta para
+cada documento
+
+el resultado final es un modelo de deep learning capaz de clasificar
+documentos en las diferentes categorías
+
+ descripción de tecnologías clave
+
+deep learning el deep learning ha sido un componente esencial en el
+desarrollo de modelos avanzados para la clasificación de documentos esta
+técnica de aprendizaje automático se caracteriza por la utilización de redes
+neuronales profundas para aprender y extraer patrones complejos de los datos
+en el contexto de este proyecto se ha aplicado el deep learning para mejorar
+la capacidad del clasificador de documentos permitiendo la identificación
+precisa de diversas categorías documentales para este propósito se han
+utilizado herramientas como keras y tensorflow que proporcionan entornos
+flexibles y potentes para la construcción y el entrenamiento de modelos de redes
+neuronales profundas
+
+redes neuronales su denominación y estructura encuentran su inspiración
+en el cerebro humano imitando la manera en que las neuronas biológicas se
+comunican entre sí se compone de unidades básicas llamadas neuronas
+artificiales organizadas en capas interconectadas que trabajan en conjunto
+para resolver problemas de aprendizaje automático
+
+estas neuronas artificiales están organizadas en capas
+
+ capa de entrada recibe los datos y los envía a través de conexiones
+ponderadas a la siguiente capa
+
+ capas ocultas procesan la información recibida de las capas anteriores
+realizando cálculos mediante operaciones matriciales y aplicando
+funciones de activación para generar salidas
+
+ capa de salida produce el resultado final o la predicción basada en el
+procesamiento de las capas anteriores
+
+pdfimage es una herramienta especialmente útil cuando se trabaja con
+documentos en formato pdf su funcionalidad principal radica en la capacidad
+de convertir páginas de un archivo pdf en imágenes lo que permite manipular
+el contenido del pdf como imágenes individuales
+
+esto es relevante en proyectos que involucran ocr reconocimiento óptico de
+caracteres o procesamiento de imágenes ya que trabajar con pdfs
+directamente puede ser más complejo debido a su naturaleza compuesta por
+capas gráficos texto y otros elementos
+
+pdfimage se utiliza para extraer estas páginas del pdf y convertirlas en
+formatos de imagen estándar como jpeg o png esto facilita enormemente el
+procesamiento de cada página como una imagen independiente lo que
+simplifica tareas como la detección y el análisis de texto utilizando herramientas
+de ocr como tesseract
+
+tesseract tesseractocr es un motor de ocr reconocimiento óptico de
+caracteres de código abierto y altamente preciso desarrollado inicialmente por
+hp y ahora mantenido por google es reconocido por su capacidad para extraer
+texto de imágenes convirtiéndolas en contenido digital procesable utiliza
+algoritmos avanzados para analizar imágenes y reconocer patrones que
+representan caracteres en diferentes idiomas
+
+el funcionamiento de tesseract se basa en modelos de redes neuronales
+convolucionales cnn y técnicas de procesamiento de imágenes para identificar
+y clasificar píxeles que representan caracteres su versatilidad y precisión lo
+hacen útil en diversas aplicaciones desde la digitalización de documentos hasta
+la extracción de texto en tiempo real en aplicaciones móviles
+
+python python es un lenguaje de programación de alto nivel reconocido
+por su sintaxis legible y versatilidad en diversos campos incluido el desarrollo
+web científico y de aprendizaje automático es una elección popular en
+proyectos de ciencia de datos y aprendizaje automático debido a su amplia gama
+de bibliotecas especializadas y su facilidad para prototipar y desarrollar
+soluciones complejas
+
+en el contexto de este proyecto python se ha utilizado debido a su ecosistema
+rico en herramientas de procesamiento de texto imágenes y datos como numpy
+y las bibliotecas específicas para procesamiento de lenguaje natural nlp y
+aprendizaje automático como tensorflow y keras
+
+tensorflow y keras keras es una api de alto nivel para la construcción y
+el entrenamiento de modelos de aprendizaje automático mientras que
+tensorflow es un marco de trabajo de código abierto para aprendizaje
+automático desarrollado por google keras proporciona una interfaz amigable y
+
+modular para trabajar con tensorflow lo que facilita la construcción y el
+despliegue de modelos de redes neuronales
+
+ambas herramientas se han utilizado para implementar modelos avanzados de
+clasificación de documentos basados en aprendizaje profundo deep learning
+estos modelos pueden aprender patrones complejos y representaciones de alto
+nivel de los datos como imágenes de documentos para lograr una precisión y
+generalización significativas en la clasificación
+
+numpy es una biblioteca fundamental en python para cálculos numéricos
+especialmente en manipulación de matrices y operaciones matemáticas su
+eficiencia en la manipulación de datos multidimensionales ha hecho que sea
+esencial en el preprocesamiento de datos para el aprendizaje automático
+incluyendo la preparación de datos para entrenamiento y validación de modelos
+
+scipy es una biblioteca de código abierto en python que se utiliza
+principalmente para matemáticas ciencia e ingeniería proporciona un
+conjunto de herramientas y algoritmos para resolver problemas matemáticos y
+científicos complejos incluyendo optimización álgebra lineal procesamiento de
+señales y estadísticas en el contexto del procesamiento de documentos scipy
+ofrece funciones útiles para el procesamiento de imágenes manipulación de
+datos y operaciones matriciales lo que la convierte en una herramienta valiosa
+para la manipulación y el análisis de imágenes de documentos
+
+poppler es una biblioteca de software que se utiliza para renderizar
+documentos pdf proporciona herramientas para extraer información de
+documentos pdf incluyendo texto imágenes y metadatos poppler permite el
+acceso programático a los contenidos de los archivos pdf lo que lo hace útil en
+aplicaciones que requieren la manipulación y extracción de datos de
+documentos en este formato en el contexto del proyecto poppler ha sido
+utilizado para el procesamiento de documentos pdf extrayendo información
+relevante para su posterior análisis y clasificación
+
+opencv open source computer vision library es una biblioteca de código
+abierto diseñada para la visión por computadora y el procesamiento de
+imágenes fue desarrollada originalmente por intel y ahora es mantenida por la
+comunidad opencv proporciona una amplia gama de funciones y algoritmos
+que permiten a los desarrolladores trabajar con imágenes y videos de manera
+eficiente
+
+las principales características y funcionalidades de opencv que aportan
+calidad a este proyecto son
+
+manipulación de imágenes y videos opencv ofrece funciones para leer escribir
+redimensionar rotar y manipular imágenes y videos
+
+procesamiento de imágenes incluye una variedad de funciones para el
+procesamiento de imágenes como filtrado suavizado detección de bordes
+transformaciones geométricas etc
+
+detección de objetos proporciona algoritmos y herramientas para la detección
+de objetos en imágenes como haar cascades detección de características etc
+
+reconocimiento de patrones ofrece herramientas para el reconocimiento de
+patrones y características en imágenes
+
+resumen
+
+en el contexto actual de creciente volumen de información la necesidad de
+clasificar documentos de manera eficiente y precisa se ha vuelto imperativa
+este trabajo de fin de grado presenta un enfoque innovador basado en
+inteligencia artificial para abordar esta problemática utilizando python como
+lenguaje de desarrollo clave en este sector la elección de python no solo
+responde a su popularidad y versatilidad sino también a su papel fundamental
+en la implementación de soluciones de inteligencia artificial
+
+el desarrollo del clasificador de documentos se ha llevado a cabo utilizando
+tecnologías avanzadas destacando tensorflow como la biblioteca principal
+para la construcción y entrenamiento del modelo de clasificación la robustez y
+eficacia de tensorflow proporcionan una base sólida para la creación de un
+sistema capaz de aprender y adaptarse a patrones complejos en los documentos
+
+además para la extracción de información crucial de los documentos se ha
+integrado optical character recognition ocr esta tecnología ha demostrado
+ser una herramienta esencial para la digitalización de documentos permitiendo
+la conversión de datos impresos en información digital accesible y procesable
+la combinación de tensorflow para la clasificación y ocr para la extracción de
+datos amplía significativamente la capacidad del sistema ofreciendo una
+solución integral para la gestión eficiente de documentos en entornos diversos
+
+los resultados obtenidos de este clasificador de documentos son prometedores
+no precisamente por su precisión y eficiencia sino principalmente por la
+escalabilidad del software para mejoras futuras la capacidad del modelo para
+adaptarse y aprender de conjuntos de datos variados sugiere un potencial
+significativo para futuras versiones
+
+aprendizaje automático opencv incluye módulos que se integran con
+bibliotecas de aprendizaje automático como tensorflow y pytorch
+
+visual studio code vscode es un entorno de desarrollo integrado ide de
+código abierto y altamente personalizable desarrollado por microsoft ofrece una
+amplia gama de características y extensiones que lo hacen popular entre los
+desarrolladores vscode es utilizado en el proyecto debido a su versatilidad su
+amplia compatibilidad con diversos lenguajes de programación y su capacidad
+para ofrecer herramientas específicas para el desarrollo de modelos de
+aprendizaje automático como la depuración interactiva integración con
+herramientas de control de versiones y extensiones especializadas para python
+tensorflow keras y otros frameworks de machine learning además su
+interfaz intuitiva y su comunidad activa de desarrolladores hacen que sea una
+elección común para la escritura de código depuración y gestión de proyectos
+en el ámbito de la ciencia de datos y el desarrollo de aplicaciones
+
+ implementación del modelo
+
+en la figura se pueden ver los principales módulos y clases que se han
+implementado en el desarrollo del software y se detalla a continuación cómo
+funcionan todas y cada una de ellas
+
+software clasificarpdf
+
+clasificarpdf a ocy
+
+entrenamiento
+
+clasificadorpy
+tableocr
+
+documenthandierpngpy
+
+
+
+entrenamiento
+
+mainpy
+
+test
+
+training
+
+redneuronalpy
+
+f
+
+tableocr imagepreprocessing
+
+imagepreprocessing noisedeletingpy
+
+tabledetection
+
+ tabledetection
+tableocrpy
+
+lineaspy
+
+tablaspy
+
+figura composición de los distintos módulos y clases del software
+
+módulo principal
+
+esta es la carpeta raíz del proyecto aquí se encuentra el programa principal y
+los submódulos a los que este accede para desarrollar tanto la clasificación
+como el entrenamiento de un nuevo modelo dependiendo de los argumentos de
+entrada
+
+ mainpy
+adentrándose en el funcionamiento de la clase principal se observa el uso de
+los siguientes módulos
+
+from tableocr import tableocr
+
+from clasificarpdf import clasificador
+import constants
+
+import sys
+
+import logging
+
+import cv
+
+import numpy as np
+
+import os
+
+from pdfimage import convertfrompath
+import tempfile
+
+from entrenamiento import redneuronal
+
+from clasificarpdf import constants as constantsentrenamiento
+
+en cuanto su funcionamiento mainpy procesa los argumentos de línea de
+comandos para obtener el nombre del fichero y la carpeta de destino
+
+en caso de que se proporcionan argumentos se clasifica un documento si no
+se proporcionan argumentos se utiliza un documento de prueba predefinido
+
+se verifica si se deben aplicar técnicas de reducción de ruido
+applynoisereduction y se especifica la acción a realizar funcion
+
+dependiendo de la acción especificada funcion se llevan a cabo diferentes
+procesos
+
+si funcion es train se entrena un modelo
+
+si funcion es traincomplete se realiza un entrenamiento más completo
+evaluación y validación del modelo
+
+en otros casos o si función es predict se pasaría a hacer la clasificación
+del documento pasado por la línea de comandos
+
+operaciones sobre imágenes y documentos
+
+se utiliza la biblioteca pdfimage para convertir archivos pdf en imágenes png
+temporales
+
+se aplican técnicas de preprocesamiento llamada a documenthandlerpng
+
+se guarda la imagen preprocesada en una carpeta temporal
+
+se hace una llamada al clasificadorpy al cual se le pasa la imagen
+preprocesada
+
+limpieza y salida del programa
+
+se realizan acciones de limpieza como eliminar carpetas temporales creadas
+durante el proceso
+
+se finaliza el programa con sysexit
+
+es recomendable activar el flag de aplicar técnicas de reducción de ruido si se
+sabe que el pdf proporcionado para clasificar dispone de imágenes o si se
+desconoce por seguridad ya que el algoritmo de procesamiento de imágenes se
+beneficia significativamente de imágenes más limpias la reducción de ruido
+ayuda a resaltar las características importantes y facilita la interpretación por
+parte de los algoritmos además de que el exceso de ruido en los datos de
+entrada puede afectar negativamente al modelo y su capacidad de identificar
+patrones
+
+ clasificarpdf
+
+este módulo dispone de dos clases muy importantes clasificadorpy y
+documenthanlderpngpy las cuales se encargan de como su mismo nombre
+indica clasificar el documento proporcionado por los argumentos al programa
+principal y realizar el preprocesamiento de datos correspondiente tokenizado y
+bow para que los datos de entrada se ajusten a los del modelo respectivamente
+
+ clasificadorpy
+librerías y clases utilizadas en este script
+
+import os
+
+from clasificarpdf import document handler png as dhpng
+import numpy as np
+
+from kerasmodels import loadmodel
+
+from clasificarpdf import constants
+
+import shutil
+
+from clasificarpdfocr import ocr
+
+import tempfile
+
+import sys
+
+import time
+
+from joblib import dump load
+
+el funcionamiento de este script es básicamente recibir y aplicar mediante la
+llamada al módulo ocr en esta misma carpeta el reconocimiento óptico de
+caracteres a la imagen recibida del script principal y plasma la información
+recogida a un fichero de extensión txt
+
+una vez recogida la información de entrada en un formato entendible se hace
+una llamada al script encargado de preprocesar los datos para que sean
+
+compatibles en nuestro abecedario documenthandlerpngpy el cuál se verá
+en el siguiente apartado
+
+pasada la información por ello el script está preparado para cargar y utilizar el
+modelo mediante la función load de joblib y le devuelve el resultado de la
+predicción a mainpy quien luego lo mostrará por pantalla
+
+ documenthandlerpngpy
+
+este de aquí se trata del módulo que extrae toda la información determinante
+para la clasificación de los documentos como el número de tablas páginas
+densidad el texto y el número de palabras
+
+las librerías y módulos que utiliza son
+
+from sklearnfeatureextractiontext import countvectorizer
+from sklearnfeatureextractiontext import tfidftransformer
+import numpy as np
+
+import os
+
+from stopwords import getstopwords
+
+from clasificarpdf import ocr
+
+from joblib import dump load
+
+from clasificarpdf import constants
+
+from sklearndecomposition import truncatedsvd
+
+una vez se ha obtenido la información más importante del texto este
+proporciona una representación bow una técnica común en procesamiento de
+lenguaje natural que transforma documentos de texto en vectores numéricos
+ignorando el orden y la estructura gramatical de las palabras y enfocándose en
+la frecuencia de aparición de las palabras en el texto
+
+se explica cómo el script realiza el tokenizado y estructura la matriz bow
+tokenización
+
+la tokenización es el proceso de dividir un texto en unidades más pequeñas
+llamadas tokens en este script la tokenización se realiza utilizando la función
+countvectorizer de la biblioteca scikitlearn aquí está el fragmento de código
+relevante
+
+vectorizer countvectorizer stopwordsstopwords corpustransformado
+ vectorizerfit transformcorpustrain
+
+stopwords son las palabras de parada es decir palabras comunes que
+generalmente se omiten durante el procesamiento de texto
+
+corpustrain es una lista que contiene el texto de los documentos de
+entrenamiento
+
+la función fittransform ajusta el vectorizador al corpus de entrenamiento y
+transforma los documentos en una matriz de conteo cada fila de la matriz
+representa un documento y cada columna representa una palabra única en el
+corpus el valor en una posición específica indica la frecuencia de esa palabra
+en el documento correspondiente
+
+representación bow
+
+después de la tokenización se obtiene una matriz dispersa llamada
+corpustransformado cada fila de esta matriz representa un documento y cada
+columna representa una palabra única el valor en la posición i j de la matriz
+indica cuántas veces aparece la palabra j en el documento i
+
+en este script también se aplica la transformación tfidf tfidftransformer
+para ponderar la importancia relativa de las palabras en la matriz bow
+
+tdidftfidftransformer bowtraintdidffittransform corpustransformad
+otoarray
+
+este paso ajusta el transformador tfidf al corpus bow y transforma la matriz
+bow en una matriz tfidf la matriz resultante bowtrain se utiliza para
+representar la información ponderada sobre la importancia de las palabras en
+cada documento
+
+reducción de dimensionalidad
+
+adicionalmente el script utiliza la técnica de singular value decomposition
+svd para reducir la dimensionalidad de la matriz bow esto se hace con la
+clase truncatedsvd de scikitlearn
+
+seleccion truncatedsvdncomponents seleccionfitbowtrain y
+bowtrain selecciontransformbowwtrain
+
+este paso reduce el número de dimensiones de la matriz bow a lo cual
+puede ser útil para manejar matrices grandes y reducir la complejidad
+computacional
+
+esto se aplica tanto en el proceso de entrenamiento como en el de prueba para
+establecer una norma en los datos y que los datos de test independientemente
+del formato se ajusten a los de entrenamiento
+
+ ocr
+
+en este módulo destaca ocrpy este script se encarga de extraer texto de
+imágenes formato png utilizando la biblioteca tesseract ocr y luego genera
+un archivo de texto txt con algunas estadísticas y el texto extraído
+
+primeros pasos
+
+se ejecuta una función que toma como entrada la ruta de una carpeta que
+contiene imágenes png la ruta de destino para guardar el archivo de texto el
+número de tablas y el nombre del archivo
+
+procesamiento de imágenes
+
+iltera sobre cada imagen en la carpeta utilizando tesseract ocr para extraer
+texto y obtener datos detallados de la imagen como cajas confidencias y
+números de línea y página
+
+almacenamiento de datos
+
+los datos detallados se almacenan en matrices y listas para su posterior
+procesamiento
+
+cálculo de estadísticas
+
+se calculan estadísticas clave como el número total de páginas el número de
+palabras y la densidad número de palabras por página
+
+se genera una lista de líneas que contiene información sobre las estadísticas
+calculadas y el texto extraído de las imágenes
+
+generación de archivo de texto
+
+se llama a la función generatetxt del módulo txtgenerator para crear un archivo
+de texto con las líneas proporcionadas la función devuelve la ruta del archivo
+de texto generado
+
+ entrenamiento
+
+en el módulo entrenamiento están las carpetas correspondientes a los
+conjuntos de prueba y entrenamiento y el script redneuronalpy fundamental
+para la creación del modelo utilizado
+
+este script implementa un sistema de clasificación de documentos que utiliza
+técnicas de procesamiento de lenguaje natural pln y aprendizaje profundo
+el objetivo principal es clasificar documentos en formatos png en un conjunto
+predefinido de clases se emplean representaciones bagofwords y redes
+neuronales artificiales rna utilizando la biblioteca keras
+
+librerias y módulos utilizados
+
+from sklearnpreprocessing import onehotencoder
+from kerasmodels import sequential
+
+from keraslayers import dense
+
+from clasificarpdf import documenthandler as dh
+from clasificarpdf import document handler png as dhpng
+import numpy as np
+
+from clasificarpdf import constants
+
+from clasificarpdfocr import ocr
+
+import os
+
+from tableocr import tableocr
+
+import tempfile
+
+import cv
+
+from pdfimage import convertfrompath
+
+import logging
+
+import shutil
+
+from keras import optimizers
+
+from sklearnpreprocessing import standardscaler
+from joblib import dump load
+
+from kerasregularizers import 
+
+from kerasmodels import loadmodel
+
+from keraswrappersscikitlearn import kerasclassifier
+from sklearnmodelselection import gridsearchcv
+from sklearnutils import shuffle
+
+from sklearnmetrics import confusion matrix
+
+precisionrecallfscoresupport
+
+teniendo en cuenta que se conoce como funcionan los módulos anteriores este
+apartado se centra en como este script desarrolla el modelo
+
+reparación de carpetas
+
+se verifica si la carpeta constantscarpetatraintxt existe si no existe se crea
+y se le otorgan permisos
+
+se itera sobre las carpetas de clases carpetatipo en carpetatrain
+transformación de pdf a png
+para cada archivo pdf imagen en la carpeta carpeta se verifica si es un pdf
+
+si es un pdf se crea una carpeta en constantscarpetatrainpdf a png para
+almacenar las imágenes png resultantes
+
+se itera sobre las páginas del pdf y se convierten a imágenes png que se
+guardan en la carpeta correspondiente
+
+creación de archivos txt
+
+se llama a la función createtxt para cada documento png creado generando
+archivos de texto txt
+
+entrenamiento del modelo
+
+después de convertir los pdf a png y crear los archivos txt se llama a la
+función trainmodel para entrenar un modelo de red neuronal
+
+preparación de datos
+
+se llama a la función dh pngbag of words train para obtener las
+características xtrain y las etiquetas y del conjunto de entrenamiento
+
+transformación de etiquetas
+
+se llama a la función transformoutput para convertir las etiquetas y en su
+representación onehot encoded
+
+normalización de datos
+
+se utiliza standardscaler para normalizar las características del conjunto de
+entrenamiento xtrain
+
+definición del modelo de red neuronal
+el modelo de red neuronal utilizado consta de tres capas
+
+la primera capa la capa de entrada contiene neuronas y utiliza la función
+de activación relu rectified linear unit esta capa recibe los datos de entrada
+y los procesa a través de estas neuronas
+
+la segunda capa la capa oculta tiene neuronas también empleando la
+función de activación relu esta capa procesa la información proveniente de la
+capa de entrada realizando operaciones intermedias para comprender las
+relaciones más complejas entre los datos
+
+finalmente la última capa es la capa de salida que cuenta con neuronas y
+utiliza la función de activación sigmoide esta capa produce la salida final del
+modelo indicando la clasificación o predicción correspondiente
+
+nuestro modelo consta de una única capa intermedia debido al modelo simple
+que se ha elaborado en primera instancia pero se estudiará para el modelo
+
+definitivo una ampliación del número de capas ocultas si esto supone una
+mejora
+
+las funciones de activación como relu rectified linear unit y sigmoide son
+bloques fundamentales en una red neuronal que determinan la salida de cada
+neurona y por ende la información transmitida a las siguientes capas
+
+relu rectified linear unit esta función asigna cero a todos los valores
+negativos de entrada y deja pasar los valores positivos sin modificarlos en
+términos simples si la entrada es mayor que cero la salida es igual a la entrada
+si es menor o igual a cero la salida es cero relu es conocida por su capacidad
+para ayudar a resolver el problema del desvanecimiento del gradiente y suele
+ser eficiente en el entrenamiento acelerando la convergencia de la red
+
+sigmoide es una función de activación que transforma los valores de entrada
+en un rango entre o y su forma de s alarga los valores hacia los extremos de
+modo que los valores muy grandes tienden a y los muy pequeños tienden a 
+se usa comúnmente en la capa de salida de una red neuronal para problemas
+de clasificación binaria donde se desea obtener una probabilidad de
+pertenencia a una clase
+
+compilación del modelo
+
+se compila el modelo utilizando el optimizador adam y la pérdida de entropía
+cruzada categórica
+
+entrenamiento del modelo
+
+se entrena el modelo en el conjunto de entrenamiento xtrain ytrain durante
+ épocas con un tamaño de lote de el modelo pasa por todo el conjunto
+de entrenamiento veces actualizándose después de procesar bloques de 
+ejemplos en cada pase
+
+durante el entrenamiento se normalizan los valores de nan e inf en el conjunto
+de entrenamiento
+
+guardado del modelo
+
+una vez finalizado el entrenamiento se guarda el modelo en un archivo hdf
+utilizando la función save de keras
+
+ tableocr
+este es el módulo que se encarga de realizar todo el preprocesamiento de las
+imágenes identificar el número de líneas número de páginas y las tablas
+
+se distribuye en un script principal tableocrpy que hace llamadas a
+noisedeletingpy y líneaspy las cuales se verán a continuación en este apartado
+
+ tableocrpy
+este script está diseñado para procesar una imagen en busca de tablas líneas
+palabras y detectarlas e importa las siguientes librerías y módulos
+
+from tableocrimagepreprocessing import noisedeleting as ip
+from tableocrtabledetection import lineas as td
+import cv
+
+import imutils
+
+la función principal toma un nombre de archivo de imagen y un indicador
+booleano el pasado por argumentos applynoisereduction y realiza los
+siguientes pasos
+
+lee la imagen original usando opencv
+
+llama a la función getpreprocessed image del módulo imagepreprocessing
+para obtener una imagen preprocesada y el ángulo de rotación
+
+rota la imagen original según el ángulo de rotación
+
+llama a la función gettables del módulo tabledetection para obtener las tablas
+detectadas en la imagen preprocesada y rotada
+
+devuelve las tablas detectadas y la imagen preprocesada
+
+este script es el motor del módulo de preprocesamiento de imágenes pero ahora
+vamos a describir las clases que la hacen funcionar
+
+ noisedeletingpy
+se mencionan los aspectos de este script que son más importantes incluye las
+siguientes librerías
+
+import cv
+
+import numpy as np
+
+from numpyfft import fft ifft
+
+from scipysignal import convolved
+
+from skimagefilters import thresholdsauvola
+from deskew import determineskew
+
+import pytesseract
+
+import imutils
+
+from pytesseract import output
+
+import logging
+
+su funcionamiento radica en las siguientes funciones
+
+ecualizacionhistogramaimagen realiza la ecualización del histograma en la
+imagen de entrada
+
+wienerfilterimg kernel k aplica el filtrado de wiener a la imagen de entrada
+utilizando el núcleo especificado y el parámetro k
+
+blurimg kernelsize aplica la convolución con un núcleo uniforme para
+desenfocar la imagen
+
+addgaussian noiselimg sigma añade ruido gaussiano a la imagen de entrada
+enderezarimg corrige la orientación de la imagen de entrada
+
+sauvolabinarizationimg aplica el método de binarización de sauvola a la
+imagen de entrada
+
+showreduced imagetitulo img scale percent muestra una versión
+redimensionada de la imagen de entrada
+
+getpreprocessedimageimage reducepercentage applynoisereduction
+
+todas estas funciones conforman una limpieza total de la imagen haciendo así
+que los algoritmos que se utilizan posteriormente sobre ellas sean más eficaces
+y precisos
+
+ lineaspy
+
+en este script se emplean numerosas funciones cuyo fin radica en la detección
+de todos los elementos que se encuentren en la imagen ya sean palabras líneas
+y tablas con ayuda de la clase auxiliar tablespy estas son todas las funciones
+que incorpora explicadas brevemente además de las librerías que incorpora
+sumadas a la clase auxiliar anteriormente mencionada
+
+import cv
+
+import numpy as np
+
+from matplotlib import pyplot as plt
+
+from shapelygeometry import linestring point
+
+import logging
+
+import tableocrtabledetectiontablas as tables
+
+funciones
+
+showreducedimage muestra una imagen reducida en tamaño
+intersection calcula la intersección entre dos segmentos de línea
+
+equalpoints compara dos puntos considerándolos iguales si están dentro de
+un margen de píxeles
+
+ordenarpuntos ordena dos puntos de un segmento siendo el inicio el punto
+más a la izquierda o más arriba
+
+anynon vertical segmentsintersect detecta intersecciones entre dos grupos
+de segmentos
+
+detectlines utiliza la transformada de hough para detectar líneas en una
+imagen
+
+dibujarpuntos dibuja puntos y líneas en una imagen
+enlargelines aumenta la longitud de los segmentos en un píxel
+
+grouppointsbydistance agrupa puntos por distancia conservando un
+representante por grupo
+
+isvertical y ishorizontal verifican si un segmento es vertical u horizontal
+
+getmoreintersection points obtiene puntos de intersección adicionales
+utilizando máscaras
+
+el método principal para recuperar las dimensiones de las tablas de una imagen
+es gettables y sus principales funciones son las siguientes
+
+detecta líneas en la imagen utilizando la transformada de hough
+amplía la longitud y busca intersecciones de los segmentos de línea
+utiliza máscaras para obtener más puntos de intersección
+
+agrupa y elimina puntos duplicados por distancia
+
+elimina esquinas incorrectas y devuelve las coordenadas de las tablas
+detectadas
+
+abstract
+
+in the current context of increasing information volume the need to classify
+documents efficiently and accurately has become imperative this bachelors
+thesis presents an innovative approach based on artificial intelligence to
+address this issue using python as a key development language in this sector
+the choice of python not only responds to its popularity and versatility but also
+to its fundamental role in implementing artificial intelligence solutions
+
+the development of the document classifier has been carried out using
+advanced technologies with tensorflow standing out as the main library for
+the construction and training of the classification model the robustness and
+effectiveness of tensorflow provide a solid foundation for creating a system
+capable of learning and adapting to complex patterns in documents
+
+furthermore for the extraction of crucial information from documents optical
+character recognition ocr has been integrated this technology has proven
+to be an essential tool for document digitization allowing the conversion of
+printed data into accessible and processable digital information the
+combination of tensorflow for classification and ocr for data extraction
+significantly enhances the systems capability providing a comprehensive
+solution for efficient document management in diverse environments
+
+the results obtained from this document classifier are promising not primarily
+due to its precision and efficiency but mainly because of the scalability of the
+software for future improvements the models ability to adapt and learn from
+various datasets suggests significant potential for future versions
+
+demostración y evaluación
+una vez expuesta toda la teoría sobre cómo funciona el software se muestra un
+ejemplo práctico para observar su funcionamiento
+
+ demostración
+
+para comprobar la capacidad del clasificador se ha elegido para este ejemplo
+proporcionar por línea de comandos un documento de tipo acuerdo
+perteneciente a la segunda clase de las que admite
+
+las figura y figura representan un ejemplo de acuerdo sin rellenar
+aunque no tiene interferencia alguna en el resultado del programa ya que las
+palabras claves que representan que este documento se trata de tipo acuerdo
+están presentes en él
+
+acuerdo de ampliación de plazos
+
+expediente 
+
+asunto 
+
+fecha de iniciación 
+
+en el procedimiento de tipo referente a 
+
+estea órgano en el ejercicio de las competencias que le atribuye disposición que
+atribuye la competencia númerofechadenominación y boe y con base en el artículo
+ de la ley de de octubre del procedimiento administrativo común de las
+administraciones públicas boletín oficial del estado boe n de de octubre de
+
+
+acuerda
+
+primero abrir un periodo de información pública por un plazo de x días a contar
+desde su publicación en el boletín oficial del principado de asturias con
+el fin de que cualquier persona física o jurídica pueda examinar el
+procedimiento y presentar las alegaciones que estime oportunas
+
+segundo el procedimiento podrá examinarse en lugar de exhibición dentro del
+siguiente horario indicarlo
+
+contra este acuerdo no cabe interponer ningún recurso aunque los interesados
+
+conforme a lo previsto en el artículo de la ley de de octubre del
+
+figura primera página del documento de entrada al programa
+
+procedimiento administrativo común de las administraciones públicas boe n 
+de de octubre de 
+
+mediante este documento se
+
+notifica a el presente acuerdo según lo exigido en el artículo de la ley de de
+octubre del procedimiento administrativo común de las administraciones públicas
+boe n de de octubre de 
+
+ciudad ispactag rulefechaactual 
+
+el cargo
+
+fdo nombre y apellidos del firmante
+
+figura segunda página del documento de entrada al programa
+
+como se menciona en el capítulo apartado sección se deben proporcionar
+argumentos de entrada a mainpy los cuáles se ven de un color azulado en la
+figura 
+
+para ello se crea un fichero auxiliar launchjson que haga el arranque más
+cómodo
+
+version 
+
+configurations 
+
+t
+name python current file
+type python
+request launch
+program file
+args 
+dococrclassificationwclasificarpdf vwejemplos vwacuerdopdf
+
+cwuserswidanielgarcia
+rodrigwbesktopwsalidadococrclassification
+
+
+predict
+l
+
+console integratedterminal
+
+justmycode false
+d
+
+en este script se aprecia que el primer argumento corresponde al documento a
+clasificar el segundo la carpeta de salida donde recibiremos los datos
+convertidos y procesados el tercero corresponde al flag activado para que el
+programa active la eliminación de ruido y el cuarto a que ejecute la función
+predict para que clasifique el documento al tratarse de un documento pdf de
+ páginas vemos como tanto en la figura y en la figura se imprime por
+pantalla por un lado el valor de la confianza ofrecida por las imágenes de cada
+una de las páginas del documento en ambos casos por lo que no sería
+necesario realizar ningún preprocesamiento de imágenes y en la variable ángulo
+el valor lo que implica que no hay que rotarla a continuación observamos
+como se lleva a cabo el reconocimiento de elementos del texto como líneas
+palabras y tablas en las trazas encabezadas por tableocrtabledetectionlineas
+
+ps cvusersdaniel garciarodrig desktop wodeloclasificacion cd cvuserswdanielgarciarodrig deskt
+nusers daniel garciarodrigh vscodevextensions s python python pythonfiles libwpython debugpyvadapter jdeb
+ugpy vauncher cvusers vwdaniel garciarodrig wesktopwodeloclasificacion oc ocrclassificationclassificated
+ocpy dococr classificationiclasificarpdflejemplosvacuerdopdf cvusersdanielgarciarodrigwesktopvsalida dococr cl
+assification predict
+ w tensorflowstream executorplatformdefaultdsoloadercc could not load dynamic library
+cudart d dlerror cudart dl not found
+ i tensorflowstream executorcudacudart stubcc ignore above cudart dlerror if you do not
+have a gpu set up on your machine
+using tensorflow backend
+ main info clasificando documento dococrclassificationclasificarpdfvejemplos vacuerdopd
+f
+ main info detectando tablas de imagen 
+ main info transformando a png dococr classificationlclasificarpdflejemplosvacuerdopdf
+guardando imagen en cwusersldanielgarciarodrigwesktopvsalida doc ocrclassificationvtmpmvsulcuhvacuerdospng
+ tableocrimagepreprocessingnoisedeleting info preprocesando imagen
+confidence 
+angulo tesseract 
+ tableocrimagepreprocessingnoisedeleting info realizando binarización de sauvola
+ tableocrimagepreprocessingnoisedeleting info filtrando puntos pequeños
+ tablecrtabledetectionlineas info detectando líneas con houghlinesp
+ tableocrtabledetectionlineas info calculando intersecciones entre segmentos
+ tablecrtabledetectionlineas info agrupando puntos por distancias
+ tableocrtabledetectionlineas info agrupando puntos por distancias
+ tablecrtabledetectionlineas info agrupando puntos por distancias
+ tableocrtabledetectionlineas info agrupando puntos por distancias
+guardando imagen en cwsers danielgarciarodrigwesktopvwsalida dococrclassificationvtmpmvsulcuhvacuerdo png
+
+guardando imagen en cnvuserswdanielgarciarodrig esktopvsalida dococrclassificationvtmpmvsulcuhvacuerdopng
+ tablecrimagepreprocessingnoisedeleting info preprocesando imagen
+confidence 
+
+angulo tessera
+
+ tableocr imagepreprocessingnoisedeleting info realizando binarización de sauvola
+ tableocr imagepreprocessingnoisedeleting info filtrando puntos pequeños
+
+ tablecr tabledetectionlineas info detectando líneas con houghlinesp
+
+ tableocrtabledetectionlineas info calculando intersecciones entre segmentos
+
+ tablecrtabledetectionlineas info agrupando puntos por distancias
+
+ tableocr tabledetection lineas agrupando puntos por distancias
+
+ tableocr tabledetectionlineas agrupando puntos por distancias
+
+ tableocrtabledetectionlineas agrupando puntos por distancias
+
+ main info clasificando imagen 
+
+ i tensorflowstream executorplatformdefaultdso loadercc successfully opened dynamic lib
+rary nvcudadl
+
+ e tensorflowstream executorcudacuda drivercc failed call to culnit cuda error unknown
+ unknown error
+
+ i tensorflowstream executorcudacuda diagnosticscc retrieving cuda diagnostic informati
+on for host iblaesmadco
+
+ i tensorflowstream executorcudacuda diagnosticscc hostname iblaesmadco
+ i tensorflowcoreplatformcpu feature guardcc this tensorflow binary is optimized with o
+neapi deep neural network library onednnto use the following cpu instructions in performancecritical operations avx
+to enable them in other operations rebuild tensorflow with the appropriate compiler flags
+
+ i tensorflowcompilerxlaserviceservicecc xla service xdb initialized for pla
+tform host this does not guarantee that xla will be used devices
+
+ t tensorflowcompilerxlaserviceservicecc streamexecutor device host default ve
+rsion
+
+creando fichero txt de doc ocrclassificationlclasificarpdfvejemplos vacuerdopdf
+
+leyendo documento cvusers wdanielgarciarodrigwesktopvtmpjviumevacuerdotxt
+
+ere conjunto de test 
+
+ 
+
+eeeeeeeecaceaecico ea ceeo
+
+backend tkagg is interactive backend turning interactive mode on
+
+figura traza de la ejecución n
+
+i tensorflowstream executorcudacuda diagnosticscc hostname iblaesmadc
+ i tensorflowcoreplatformcpu feature guardcc this tensorflow binary is optimized with
+oneapi deep neural network library onednnto use the following cpu instructions in performancecritical operations avx
+to enable them in other operations rebuild tensorflow with the appropriate compiler flags
+
+ i tensorflowcompilerxlaserviceservicecc xla service xe initialized for pl
+atform host this does not guarantee that xla will be used devices
+
+ i tensorflowcompilerxlaserviceservicecc streamexecutor device host default v
+ersion
+
+creando fichero txt de doc ocrclassificationlclasificarpdfvejemplos vacuerdopdf
+
+leyendo documento c vusers qdanielgarciarodrig wesktopvtmpgzznkl vacuerdotxt
+ertreeeedeeeeeetee conjunto de test ttrerrnerrareoa
+
+ 
+
+areeaeaeaeaea nan ti ea na nanka anen ea a aeaeanrnnaaentanantatananeanana
+
+el documento dococr classificationclasificarpdfvejemplos vacuerdopdf pertenece a la clase 
+ main info el código de ejecución es acuerdo
+
+backend tkagg is interactive backend turning interactive mode on
+
+figura traza de la ejecución n
+
+tras realizar todos los algoritmos mencionados en los capítulos anteriores se
+observa en la figura como la traza nos devuelve la predicción del clasificador
+evaluando en este caso correctamente que el documento se trata de un acuerdo
+
+acuerdo de ampliación de plazos
+
+expediente 
+interesado 
+
+en el procedimiento de tipo referente a 
+
+estea órgano en el ejercicio de las competencias que le atribuye disposición que
+atribuye la competencia númerofechadenominación y boe y con base en el artículo
+ de la ley de de octubre del procedimiento administrativo común de las
+administraciones públicas boletín oficial del estado boe n de de octubre de
+
+
+acuerda
+primero abrir un periodo de información pública por un plazo de x días a contar
+desde su publicación en el boletín oficial del principado de asturias con
+
+el fin de que cualquier persona física o jurídica pueda examinar el
+procedimiento y presentar las alegaciones que estime oportunas
+
+segundo el procedimiento podrá examinarse en lugar de exhibición dentro del
+siguiente horario indicarlo
+
+contra este acuerdo no cabe interponer ningún recurso aunque los interesados
+conforme a lo previsto en el artículo de la ley de de octubre del
+
+figura primera página del documento cambiada de pdf a png
+
+procedimiento administrativo común de las administraciones públicas boe n 
+de de octubre de 
+
+mediante este documento se
+
+notifica a el presente acuerdo según lo exigido en el artículo de la ley de de
+octubre del procedimiento administrativo común de las administraciones públicas
+boe n de de octubre de 
+
+ciudad ispactag rulefechaactual 
+
+el cargo
+
+fdo nombre y apellidos del firmante
+
+figura segunda página del documento cambiada de pdf a png
+
+en las figura y figura podemos ver los ficheros temporales de las
+imágenes preprocesadas antes durante la ejecución del programa que se
+eliminarán una vez este termine sobre ellas se aplicará el ocr y extracción de
+elementos trascendentes como se puede ver en el siguiente texto extraído del txt
+generado por el programa de nombre acuerdotxt
+
+numpalabras
+
+numpaginas
+
+densidad
+
+densidadtablas
+
+texto acuerdo de ampliacion de plazos
+
+expediente 
+
+interesado 
+
+fecha de iniciacion 
+
+en el procedimiento de tipo referente a 
+
+estea organo en el ejercicio de las competencias que le atribuye disposicidn
+que
+
+atribuye la competencia numerofechadenominación y boe y con base en el
+articulo
+
+ de la ley de de octubre del procedimiento administrativo comun
+de las
+
+administraciones publicas boletin oficial del estado boe n de de
+octubre de
+
+
+
+acuerda
+
+primero abrir un periodo de informacién publica por un plazo de x dias a contar
+
+desde su publicacién en el boletin oficial del principado de asturias con
+
+el fin de que cualquier persona fisica o juridica pueda examinar el
+procedimiento y presentar las alegaciones que estime oportunas
+
+segundo el procedimiento podra examinarse en lugar de exhibicidn dentro del
+
+siguiente horario indicarlo
+
+contra este acuerdo no cabe interponer ningun recurso aunque los interesados
+
+conforme a lo previsto en el articulo de la ley de de octubre
+del procedimiento administrativo comun de las administraciones publicas
+boe n 
+
+de de octubre de 
+
+mediante este documento se
+
+notifica a 
+el cargo
+
+fdo nombre y apellidos del firmante
+
+ evaluación y discusión del modelo
+
+el análisis y la evaluación exhaustiva de cualquier sistema son pilares
+fundamentales para su mejora y evolución esta sección se adentra en la
+discusión del modelo actual explorando sus puntos fuertes desafíos y áreas de
+mejora se analiza su eficiencia y precisión cada faceta contribuye a trazar el
+camino hacia un sistema más refinado y efectivo esta evaluación crítica
+además ofrece una perspectiva esencial para futuras iteraciones y para alinear
+el modelo con las expectativas del cliente
+
+ evaluación del modelo propuesto
+a pesar del notable desarrollo del clasificador el ejercicio práctico presentado
+revela que el tiempo de clasificación es de segundos lo que indica la
+
+necesidad de una optimización significativa en términos de velocidad además
+se llevó a cabo una prueba de precisión con documentos de los cuales solo
+se categorizaron correctamente estos resultados subrayan la
+urgencia de mejorar tanto la eficiencia temporal como la precisión del
+clasificador ambos aspectos serán abordados en futuras actualizaciones
+donde se plantearán y explorarán algoritmos de retroalimentación y diversas
+técnicas de aprendizaje con el objetivo de optimizar el proceso y mejorar la
+exactitud de las clasificaciones
+
+resultados y conclusiones
+
+este proyecto ha representado un viaje significativo en mi trayectoria
+profesional marcado por la inmersión en el campo de la inteligencia artificial y
+el procesamiento de documentos desde la exploración de herramientas clave
+como python y sus librerías hasta el desafío de realizar un proyecto funcional
+de ia cada paso ha supuesto una experiencia formativa enriquecedora en esta
+sección se resumen los logros alcanzados se identifican los desafíos
+enfrentados y se reflexiona sobre las contribuciones realizadas a este campo en
+constante evolución
+
+ conclusiones
+en el desarrollo de este proyecto se han alcanzado notables metas relacionadas
+con la consecución de los siguientes objetivos clave
+
+conclusión principal
+
+la consecución exitosa de los objetivos delineados en el capítulo respalda
+firmemente el haber logrado el objetivo principal el desarrollo de un nuevo
+modelo para clasificar documentos mediante técnicas de inteligencia artificial
+el diseño integral de la aplicación la implementación eficaz en python
+utilizando las tecnologías pertinentes la realización de pruebas exhaustivas y
+la identificación proactiva de áreas de mejora son evidencias tangibles de un
+enfoque metodológico y técnico sólido además de cumplir el objetivo principal
+se desprenden una serie de conclusiones secundarias
+
+diseño de la aplicación a nivel global
+
+se ha establecido una estructura eficaz para el clasificador de documentos
+donde todos los módulos y scripts se integran de manera cohesionada este
+diseño permite que el clasificador funcione de manera fluida al ejecutar un solo
+script desde la conversión de archivos pdf a formato png hasta el
+preprocesamiento de imágenes y la creación de un complejo abecedario
+mediante tokenizado se ha logrado consolidar un modelo integral capaz de
+identificar con confianza la tipología de los documentos proporcionados
+
+implementación de la estructura en python
+
+se ha logrado la implementación efectiva del diseño propuesto en python
+utilizando las tecnologías explicadas en los capítulos anteriores dell trabajo
+garantizando una coherencia entre la propuesta teórica y la aplicación práctica
+
+realización de pruebas y test
+
+a pesar de las posibles mejoras evidentes tanto en eficiencia como en precisión
+del sistema las pruebas concluyen en que el clasificador está funcionando en
+su primera versión es eficaz y cumple con los propósitos establecidos
+
+ logros personales
+
+el desarrollo de este proyecto ha sido una travesía de aprendizaje y logros
+potenciando habilidades esenciales y consolidando experiencias valiosas en el
+campo tecnológico
+
+dominio de python y herramientas clave de ia
+
+haber abordado el lenguaje python junto con sus librerías esenciales como
+numpy scipy tensorflow y keras representa un hito importante en mi
+desarrollo profesional estas herramientas son la columna vertebral del campo
+
+contenido
+
+ introducción
+
+ motivación y necesidad del proyecto 
+ objetivos mmieccireeccce e d ee d ee e e eee 
+ planificaciónrmeceereer e d i i i i i ir i i dr r r e 
+ estado del arteeeeiieiieee ee i i ir i i i i ra 
+ estructura de la memoria eeermerceieer ece d r ii iii aa 
+
+ soluciones existentes y tecnologías empleadas
+
+ clasificador de documentos registrados en el eni 
+ tecnologías y herramientas utilizadas c 
+ desarrollo del clasificador de documentos eesscerccocenecoccccnees 
+ análisis de requisitos mmee e r i i ir r ii ra 
+ requisitos funcionales ere dd e i 
+ requisitos no funcionales meeeeed a 
+ diseño del clasificador propuesto eeee d 
+ descripción de tecnologías clavem dd di 
+ implementación del modelo d aa 
+ módulo principaleeeeerieeeeri eee e i 
+ clasificarpdfeeeeeeeeeeneeeee eeec de e 
+ entrenamientoeeereeeeemeee e d dd d e i 
+ tableocr
+ demostración y evaluaciónsecorceccccccecoocererecene ececcc 
+ demostración c e ecec eee ee 
+ evaluación y discusión del modelo 
+ evaluación del modelo propuestoe 
+ resultados y conclusiones cescoccoceoccococcoconconeoacaceacccceneeaene 
+ conclusiones 
+ logros personaleseeeeceriieeceier ee i d ii r ii i a 
+ futuras ampliaciones del clasificador e 
+ análisis de impacto escrccoccecccecoceneco eee 
+ bibliografía eecccrcceccec ccc e c eee eee eee eee eee 
+ anexosecoocoosecieecocoococoncecanecoocococceocantantonecacoccascastareaecoccoco ece 
+
+ii
+
+de la inteligencia artificial y su dominio no solo abre puertas sino que también
+brinda una comprensión más profunda sobre la construcción de modelos el
+procesamiento de datos y la implementación de algoritmos de aprendizaje
+automático esta inmersión en un lenguaje de programación en auge representa
+una inversión significativa en mi futuro en el sector
+
+iniciación laboral y experiencia en proyectos a escala empresarial
+
+este proyecto marca mi debut laboral contribuyendo a una empresa en la
+implementación de soluciones tecnológicas trabajar en un proyecto de esta
+envergadura me ha brindado una visión realista de las expectativas y desafíos
+que conlleva el desarrollo de soluciones tecnológicas la responsabilidad
+individual asumida en este proyecto ha sido fundamental para mi crecimiento
+profesional
+
+gestión efectiva de proyectos
+
+la ejecución exitosa de este proyecto se ha visto respaldada por la adopción de
+metodologías ágiles tales como el uso de calendarios estructurados con sprints
+y que a pesar de los inevitables contratiempos haber logrado finalizar el
+proyecto en el tiempo estipulado ha propiciado el crecimiento de mi gestión
+personal de eficiencia de proyectos y cumplimiento de los plazos
+
+desarrollo de habilidades de colaboración y trabajo en equipo
+
+este proyecto ha sido una plataforma para aprender a colaborar y trabajar en
+equipo la capacidad para solicitar ayuda y aprovechar los conocimientos de los
+compañeros con más experiencia en la materia ha sido fundamental estas
+interacciones han contribuido a fortalecer mis habilidades de colaboración y
+resolución de problemas en un entorno de equipo
+
+agilidad en la recopilación y validación de información
+
+la experiencia adquirida en la búsqueda selección y validación de información
+de diversas fuentes ha sido significativa esta habilidad mejorada en la
+identificación de fuentes confiables y la agilidad en la búsqueda de recursos
+pertinentes ha optimizado el proceso de recopilación de datos mejorando la
+eficiencia y la precisión en la obtención de información relevante para el
+proyecto
+
+ futuras ampliaciones del clasificador
+
+actualmente colaboro con un compañero de mi departamento en inetum en la
+integración del software en la aplicación web de isicres producto de mi
+departamento este proyecto implica no solo la incorporación del nuevo modelo
+desarrollado sino también trabajar otros aspectos de la programación
+relacionados con el servidor web las bases de datos y la utilización de
+herramientas como maven dado que mi incorporación al equipo es reciente
+estoy inmerso en el proceso de familiarización con la vasta cantidad de código
+que compone la aplicación de isicres
+
+la colaboración con mi compañero ha sido fundamental ya que junto a su
+orientación y apoyo hemos logrado realizar avances significativos tanto que la
+pestaña que albergará la funcionalidad del nuevo modelo ha sido creada
+recientemente a la espera de la implementación del mismo este logro marcará
+un hito en el proyecto ya que se podrá visualizar la interfaz gráfica de la
+aplicación con la pestaña de clasificación abierta la figura muestra el
+progreso de la pestaña mencionada
+
+co locelhostsicresdefaultspidiomabinumidiomaarchiveldfolderlddistidowaspcsrftokenxvwptvwinxfkvk o y i o
+invesicres
+syssuperuser ofi oficinal c
+
+c inicio libro clasificación
+
+resultados de mnformes relaciones distribución intercambio
+
+uibros clasificación ea re
+
+e se ha producido un error al obtener la bandeja de entrada de intercambio registral intentelo de nuevo más tarde o
+consulte con su administrador
+
+figura progreso de la integración de la aplicación
+
+cuando se termine la integración me gustaría proponer para sus primeras
+clasificaciones algún sistema de retroalimentación donde si se efectúa mal una
+clasificación la persona que lo utilice pueda rectificar a mano su predicción y
+esto le sirva al programa para aprender de sus errores
+
+otra futura implementación debe ser ir añadiendo a medida que dispongamos
+de los recursos más datos de entrenamiento con los otros tipos documentales
+que recoge el eni para que a medida que pase el tiempo se convierta en un
+clasificador asociado a este marco en su totalidad
+
+como último punto comentar otro módulo extra que me gustaría añadir en el
+futuro al clasificador y consiste en un módulo que mediante técnicas de
+inteligencia artificial sea capaz de clasificar documentos compuestos en lote
+es decir si al clasificador le pasas un pdf que no está formado por un único
+documento sea capaz de identificar los diferentes documentos separarlos y
+clasificarlos individualmente
+
+análisis de impacto
+
+en este capítulo se analiza el impacto que puede tener un clasificador de
+documentos desarrollado con técnicas de aprendizaje automático en diferentes
+áreas de la vida
+
+impacto empresarial
+
+para las empresas la implementación de un clasificador de documentos implica
+una optimización significativa de los procesos internos la capacidad de
+categorizar automáticamente documentos como contratos o acuerdos mejora la
+eficiencia operativa y reduce la carga de trabajo manual
+
+impacto social
+
+en entornos sociales la capacidad de acceder rápidamente a información legal
+contenida en documentos como informes o convenios puede ser crucial el
+clasificador facilita este acceso promoviendo la transparencia y el conocimiento
+
+impacto económico
+
+la implementación del clasificador puede traducirse en un ahorro significativo
+de tiempo y recursos en empresas y organizaciones al automatizar la
+clasificación y búsqueda de documentos esto podría tener un impacto positivo
+en la eficiencia operativa y reducir los costos asociados con la gestión
+documental
+
+la capacidad de clasificar documentos de manera efectiva puede abrir
+oportunidades para ofrecer nuevos servicios relacionados con la gestión
+documental a nivel empresarial generando posibles ingresos adicionales
+
+impacto medioambiental
+
+al facilitar la gestión digital de documentos el clasificador puede contribuir a la
+reducción del uso de papel en entornos empresariales y administrativos
+teniendo así un impacto positivo en la conservación del medio ambiente
+
+impacto cultural
+
+en el contexto cultural la capacidad de clasificar y preservar documentos
+históricos o culturalmente relevantes puede ser esencial el clasificador puede
+contribuir a la conservación de estos documentos asegurando su disponibilidad
+para generaciones futuras
+
+se puede relacionar el impacto generado en ciertas áreas recién mencionadas
+con algunos de los objetivos de desarrollo sostenible ods de la agenda 
+
+
+como se menciona en el impacto medioambiental la reducción del uso del papel
+puede suponer una reducción de las emisiones de gases de efecto invernadero
+
+si se utiliza papel reciclado además de reducir la presión sobre los bosques
+se consigue un ahorro sustancial de energía y se reducen las emisiones
+de gases de efecto invernadero la razón más evidente es que los
+procesos de tala y refinamiento del papel generan gases de efecto invernadero
+como dióxido de carbono y metano
+
+los ods recogen como como meta fortalecer la resiliencia y la capacidad
+de adaptación a los riesgos relacionados con el clima y los desastres naturales
+en todos los países por lo que reducir las emisiones de gases de efecto
+invernadero supondría un impacto directo hacia esta meta
+
+la meta busca lograr niveles más elevados de productividad económica
+mediante la diversificación la modernización tecnológica y la innovación entre
+otras cosas centrándose en los sectores con gran valor añadido y un uso
+intensivo de la mano de obra y el clasificador documental podría liberar carga
+de trabajo para favorecer ese uso intensivo en la mano de obra
+
+bibliografía
+
+ d rubier evolución histórica de la clasificación documental 
+
+ enl pae esquema nacional de interoperabilidad eni
+administracionelectronica gobes
+
+ sealpath ventajas de clasificación de datos con ia y machine learning
+sealpathcom octubre 
+
+ qué son las redes neuronales qué son las redes neuronales ibm
+
+ r smith an overview of the tesseract ocr engine ninth international
+conference on document analysis and recognition icdar vol 
+ieee 
+
+ p joshi artificial intelligence with python packt publishing ltd 
+
+ a gulli and p sujit deep leaming with keras packt publishing ltd
+
+
+ m a abu a study on image classification based on deep learning and
+tensorflow international journal of engineering research and technology
+ vol no p 
+
+ ods cambio climático desarrollo sostenible funorg
+
+ minutos ayuda al medio ambiente gestos para reducir tu huella
+de carbono minutoses
+
+anexos
+
+tfg daniel garcía rodríguez
+
+informe de originalidad
+
+ os
+
+indice de similitud fuentes de internet publicaciones trabajos del
+estudiante
+
+fuentes primarias
+
+aupmes
+ fuente ee internet 
+ithubcom
+
+glenle de internet 
+
+submitted to universidad internacional de la 
+rioja
+trabajo del estudiante
+
+u mafiadoccom 
+fuente de internet 
+
+medaenvidiatucochecom 
+fuente de internet 
+submitted to corporación universitaria 
+
+minuto de dios uniminuto
+
+trabajo del estudiante
+
+b e
+
+submitted to escuela politecnica nacional 
+trabajo del estudiante 
+
+submitted to universidad politécnica de 
+madrid 
+
+trabajo del estudiante
+
+figura informe de originalidad creado por la herramienta tumnitin
+
+este documento esta firmado por
+
+pdf
+
+firmante cntfgmfiupmes ouccfi oets ingenieros informaticos 
+upm ces
+
+fechahora mon jan cet 
+
+emisor del emailaddresscamanagerlcetsiinfupmes cnca ets ingenieros
+
+certificado informaticos oets ingenieros informaticos upm ces
+
+numero de serie 
+
+metodo
+
+urnadobecomadobeppkliteadbepkcsshal adobe
+signature
+
+figuras
+
+figura diagrama de gantt nccrreocccrzececeoeeeeiece ee eee e e ie
+figura diagrama de flujo de la aplicación a nivel global
+figura composición de los distintos módulos y clases del software
+figura primera página del documento de entrada al programa
+figura segunda página del documento de entrada al programa 
+figura traza de la ejecución n
+figura traza de la ejecución n
+figura traza de la ejecución n
+figura primera página del documento cambiada de pdf a png
+figura segunda página del documento cambiada de pdf a png
+figura progreso de la integración de la aplicación 
+figura informe de originalidad creado por la herramienta turnitin 
+
+iv
+
+introducción
+
+en la era digital actual la gestión eficiente de documentos se ha convertido en
+un desafiío ineludible dada la abrumadora cantidad de información que fluye
+constantemente en entornos virtuales la clasificación constituye una parte
+esencial de los procedimientos técnicos implementados en las instituciones de
+información proporciona los medios necesarios tanto para la organización
+interna como para la búsqueda y recuperación eficientes de documentos
+almacenados este trabajo de fin de grado se sumerge en la esencia misma
+de esta problemática abordando el diseño e implementación de un clasificador
+de documentos basado en tesseractocr y desarrollado en el entorno de
+programación python
+
+ motivación y necesidad del proyecto
+
+si bien es cierto que existen otros clasificadores de documentos el que se
+pretende desarrollar en este trabajo consiste en la elaboración de uno de
+carácter privado para la empresa para la que trabajo inetum y se basará
+principalmente en cubrir aquellos documentos registrados en el esquema
+nacional de interoperabilidad eni el cual consiste en un marco normativo y
+técnico establecido por el país con el objetivo de garantizar la interoperabilidad
+entre las administraciones públicas 
+
+se puede resaltar la necesidad del clasificador en los siguientes puntos
+
+personalización y adaptabilidad al tener un clasificador propio basado en el
+modelo del eni se puede adaptar y personalizar la clasificación de documentos
+según las necesidades y peculiaridades específicas de los clientes esto permite
+ofrecer soluciones más ajustadas y precisas a las demandas individuales
+
+mejora de la eficiencia automatizar la clasificación de documentos mediante
+un modelo propio permite optimizar los procesos internos de la empresa y los
+de sus clientes esto conlleva a una mayor eficiencia operativa al reducir el
+tiempo dedicado a la clasificación manual de documentos liberando recursos y
+permitiendo un enfoque más estratégico en otras áreas
+
+incremento en la exactitud al desarrollar un clasificador propio basado en el
+modelo del eni se puede lograr una mayor precisión en la clasificación de
+documentos minimizando errores y mejorando la calidad del servicio ofrecido a
+los clientes
+
+confidencialidad y seguridad al tener un clasificador interno se puede
+asegurar la confidencialidad de los datos de los clientes al manejar la
+información de manera interna sin depender de servicios externos para la
+clasificación de documentos sensibles
+
+capacidad de escalabilidad desarrollar un clasificador propio nos brinda la
+flexibilidad para adaptarse a un crecimiento futuro esto significa que el modelo
+puede ajustarse y escalar según las necesidades cambiantes de la empresa y de
+sus clientes sin depender de soluciones externas
+
+ objetivos
+
+se va a establecer como objetivo principal de este trabajo el desarrollo de un
+nuevo modelo para un clasificador de documentos y para ello se tiene que
+cumplimentar una serie de objetivos específicos donde la realización de todos
+ellos culmine en el principal
+
+los objetivos específicos son los siguientes
+
+ diseñar la aplicación a nivel global especificar los diferentes módulos y
+scripts que constituyen el clasificador
+
+ implementar la estructura propuesta en python
+
+ realizar las correspondientes pruebas y test
+
+ planificación
+a continuación se va a establecer una lista de tareas y una duración estimada
+
+este proyecto de fin de carrera va a ser realizado como mencionaba
+anteriormente con la empresa inetum y la duración será de unas horas
+aproximadamente divididas en las distintas tareas por lo que se dedicarán 
+horas diarias durante semanas de octubre a diciembre
+
+las tareas por realizar son las siguientes
+
+ familiarización con los entornos de desarrollo y programación
+
+ realizar un diseño a nivel global de la aplicación
+
+ integrar algoritmos de deep learning para entrenar y crear un modelo
+capaz de identificar la tipología de documentos de manera precisa
+
+ desarrollar un software que extraiga los textos y las características
+importantes de ellos dado un pdf
+
+ implementar un predictor para poder llevar a cabo la demostración del
+funcionamiento de los programas anteriores
+
+ realizar las correspondientes pruebas o tests
+
+ escritura de la memoria final
+
+ preparación de la presentación de tfg
+
+en la figura podemos ver como se reparte el tiempo en las tareas recién
+mencionadas en el orden tal cual están estipuladas en el listado anterior a lo
+argo de las semanas de la duración del trabajo
+
+semana semana semana semana semana semana semana semana semana semana semana semana
+ 
+
+tarea
+
+tarea
+
+tarea
+
+tarea 
+
+tareas
+
+tarea
+
+tarea
+
+tarea
+
+figura diagrama de gantt
+
+ estado del arte
+el estado del arte en el área de trabajo de este proyecto revela avances
+significativos en el reconocimiento óptico de caracteres ocr y la clasificación
+
+documental investigaciones recientes han demostrado un interés creciente en
+la aplicación de técnicas de aprendizaje automático y procesamiento de
+imágenes para mejorar la precisión y eficiencia de los sistemas de gestión
+documental
+
+en cuanto al reconocimiento óptico de caracteres tecnologías como tesseract
+ocr han emergido como referentes en la conversión de imágenes y documentos
+escaneados en texto editable la versatilidad de estas herramientas ha
+catalizado su implementación en diversas aplicaciones desde la extracción de
+texto en documentos históricos hasta la digitalización de archivos en entornos
+empresariales
+
+en el ámbito de la clasificación documental investigaciones previas han
+explorado enfoques tradicionales y modernos basados en aprendizaje
+automático la incorporación de modelos de machine learning ha permitido la
+creación de clasificadores más sofisticados capaces de adaptarse a una variedad
+de tipos de documentos y estructuras al nutrirse de manera constante con
+datos sectoriales y regulatorios los modelos se retroalimentan y mejoran a
+partir de los juicios de los usuarios en su proceso de clasificación este enfoque
+permite corregir posibles inferencias de precisión en distintas iteraciones dentro
+de una organización específica gracias a la inteligencia artificial el sistema
+puede sugerir al usuario tipos de clasificación eliminando la necesidad de que
+este esté capacitado para clasificar documentos a diferencia de los sistemas más
+básicos se puede lograr una precisión del al identificar la propiedad
+intelectual 
+
+además se observa una tendencia hacia la integración de tecnologías python
+en proyectos de gestión documental aprovechando su flexibilidad y robustez
+la comunidad académica y profesional ha destacado la eficacia de python en la
+implementación de sistemas escalables y personalizables
+
+sin embargo se identifican desafíos persistentes como la mejora continua de
+la precisión del reconocimiento la adaptabilidad a documentos con formatos
+variados y la gestión eficiente de grandes volúmenes de datos este panorama
+del estado del arte proporciona un contexto sólido para la investigación y
+desarrollo propuestos en este proyecto destacando áreas clave donde se puede
+innovar y mejorar la eficacia de los sistemas existentes
+
+ estructura de la memoria
+se proporciona de manera muy esquematizada los diferentes capítulos que se
+abordan en el documento
+
+capítulo el capítulo presenta la base del proyecto con los tipos de
+clasificaciones registradas y resalta las tecnologías clave empleadas
+
+capítulo en este capítulo se desarrolla e implementa el diseño del modelo en
+cuestión revisando las diferentes clases y módulos de los que se compone y
+supervisando sus requisitos funcionales y no funcionales
+
+capítulo compuesto de una demostración visual del funcionamiento del
+software acompañado de la evaluación de este
+
+capítulo en este capítulo se abordan los resultados obtenidos tanto a nivel
+personal como profesional así como las futuras aplicaciones sobre el proyecto
+
+capítulo este capítulo contiene alguno de los impactos que el trabajo podría
+producir en el mundo así como los impactos producidos como solución a
+algunas propuestas de los ods
+

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block contect%}
+Crear Estado Solicitud
+{{error}}
+<form method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button>
+        save
+    </button>
+</form>
+{% endblock %}

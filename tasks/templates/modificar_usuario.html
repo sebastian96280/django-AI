@@ -1,0 +1,71 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+{{error}}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Usuarios /</span> Modificar
+</h4>
+<div class="row mb-4">
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Modificar Usuario</h5>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <p>
+                        <label for="id_email">Correo:</label>
+                        <input type="email" name="email" class="form-control" placeholder="email@example.com"
+                            maxlength="320" required="" id="id_email" value="{{usuario.user.email}}">
+                    </p>
+                    <p>
+                        <label for="id_is_superuser">Es Adminitrador?</label>
+                        <input type="checkbox" name="is_superuser" class="form-check-input"
+                            aria-describedby="id_is_superuser_helptext" id="id_is_superuser" {% if usuario.user.is_superuser %}checked{% endif %}>
+                        <span class="helptext" id="id_is_superuser_helptext">Indica que este usuario tiene todos los
+                            permisos</span>
+                    </p>
+                    <p>
+                        <label for="id_nombre_completo">Nombre Completo:</label>
+                        <input type="text" name="nombre_completo" class="form-control" placeholder="Joe Doe" required=""
+                            id="id_nombre_completo" value="{{usuario.nombre_completo}}">
+                    </p>
+                    <p>
+                        <label for="id_cargo">Cargo:</label>
+                        <input type="text" name="cargo" class="form-control" placeholder="Administrador" required=""
+                            id="id_cargo" value="{{usuario.cargo}}">
+                    </p>
+                    <p>
+                        <label for="id_id_documento">Tipo de Identificación:</label>
+                        <select name="id_documento" class="form-control" required="" id="id_id_documento">
+                            {% for documento in documentos %}
+                            <option value="{{ documento.id }}" {% if usuario.id_documento.id == documento.id %}selected{% endif %}>
+                                {{ documento.nombre_tipo }}
+                            </option>
+                           {% endfor %}                            
+                        </select>
+                    </p>
+                    <p>
+                        <label for="id_numero_identificacion">Número de Identificación:</label>
+                        <input type="text" name="numero_identificacion" class="form-control" placeholder="1234567891"
+                            required="" id="id_numero_identificacion" value="{{usuario.numero_identificacion}}">
+                    </p>
+                    <p>
+                        <label for="id_id_area">Area o Departamento:</label>
+                        <select name="id_area" class="form-control" required="" id="id_id_area">
+                            {% for area in areas %}
+                            <option value="{{ area.id }}" {% if usuario.id_area.id == area.id %}selected{% endif %}>
+                                {{ area.nombre_area }}
+                            </option>
+                           {% endfor %} 
+                        </select>
+                    </p>
+                    <button type="submit" class="btn btn-primary me-2">
+                        <span class="tf-icons bx bxs-edit-alt me-1"></span> Modificar Usuario
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

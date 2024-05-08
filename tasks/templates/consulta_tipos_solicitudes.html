@@ -1,0 +1,51 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Tipos de Solicitudes /</span> Consultar
+</h4>
+<div class="card">
+    <h5 class="card-header">Consultar Tipos de Solicitudes</h5>
+    <div class="card-body">
+        {% if mensaje%}
+        <div class="alert alert-success" role="alert">
+            {{mensaje}}
+        </div>
+        {% endif %}
+        <div class="card-datatable table-responsive">
+            <table class="dt-responsive table-borderless dataTable dtr-column collapsed" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre Tipo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los registros de la tabla -->
+                    {% for tipo_solicitud in tipos_solicitudes %}
+                    <tr>
+                        <td>{{tipo_solicitud.id}}</td>
+                        <td>{{tipo_solicitud.nombre_solicitud}}</td>
+                        <td>{{tipo_solicitud.estado|yesno:"Activo,Inactivo"}}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item" href="{% url 'modificartipoSolicitud' tipo_solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Editar</a>
+                                  <a class="dropdown-item" href="{% url 'activar_desactivar_tipo_solicitud' tipo_solicitud.id %}"><i
+                                    class=" bx bxs-receipt me-1"></i>{{tipo_solicitud.estado|yesno:'Desactivar,Activar'}}</a>
+                                </div>
+                              </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

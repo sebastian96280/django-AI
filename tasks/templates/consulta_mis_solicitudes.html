@@ -1,0 +1,69 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Solicitudes /</span> Consultar Solicitudes Abiertas
+</h4>
+<div class="card">
+    <h5 class="card-header">Consultar Solicitudes Abiertas</h5>
+    <div class="card-body">
+        {% if mensaje%}
+        <div class="alert alert-success" role="alert">
+            {{mensaje}}
+        </div>
+        {% endif %}
+        <div class="card-datatable table-responsive">
+            <table class="dt-responsive table-borderless dataTable dtr-column collapsed" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Radicado #</th>
+                        <th>Estado de la Solicitud</th>
+                        <th>Nombre del solicitante</th>
+                        <th>Correo</th>
+                        <th>Asunto</th>
+                        <th>Solicitud</th>
+                        <th>Tipo de Solicitud</th>
+                        <th>Area</th>
+                        <th>Usuario</th>
+                        <th>Fecha de radicación</th>
+                        <th>Fecha de respuesta oportuna</th>
+                        <th>Respuesta</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los registros de la tabla -->
+                    {% for solicitud in solicitudes %}
+                    <tr>
+                        <td>{{solicitud.id}}</td>
+                        <td>{{solicitud.id_estado_solicitud.nombre_tipoS}}</td>
+                        <td> {{solicitud.id_tipo_identificacion.nombre_tipo}} {{solicitud.numero_identificacion}}
+                            {{solicitud.nombre}} {{solicitud.apellidos}} </td>
+                        <th>{{solicitud.correo}}</th>
+                        <th>{{solicitud.asunto}}</th>
+                        <th><a href="{% url 'pdf_view' solicitud.archivo.name|slice:'5:' %}" target="_blank">Ver PDF</a></th>
+                        <th>{{solicitud.id_tipo_solicitud.nombre_solicitud}}</th>
+                        <th>{{solicitud.id_area.nombre_area}}</th>
+                        <th>{{solicitud.id_usuario}}</th>
+                        <th>{{solicitud.fecha_de_registro}}</th>
+                        <th>{{solicitud.fecha_de_respuesta_oportuna}}</th>
+                        </th>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{% url 'modificar_solicitud_completa' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Modificar Solicitud</a>
+                                  <a class="dropdown-item" href="{% url 'editar_solicitud_area_tipo' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Clasificar Solicitud</a>
+                                  <a class="dropdown-item" href="{% url 'responder_solicitud' solicitud.id %}"><i class="bx bx-mail-send me-1"></i>Responder</a>
+                                </div>
+                              </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

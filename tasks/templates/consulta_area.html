@@ -1,0 +1,51 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Areas o Departamentos /</span> Consultar
+</h4>
+<div class="card">
+    <h5 class="card-header">Consultar Areas o Departamentos</h5>
+    <div class="card-body">
+        {% if mensaje%}
+        <div class="alert alert-success" role="alert">
+            {{mensaje}}
+        </div>
+        {% endif %}
+        <div class="card-datatable table-responsive">
+            <table class="dt-responsive table-borderless dataTable dtr-column collapsed" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los registros de la tabla -->
+                    {% for area in areas %}
+                    <tr>
+                        <td>{{area.id}}</td>
+                        <td>{{area.nombre_area}}</td>
+                        <td>{{area.estado|yesno:"Activo,Inactivo"}}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
+                                <div class="dropdown-menu">
+                                  <a class="dropdown-item" href="{% url 'ModificarArea' area.id %}"><i class="bx bx-edit-alt me-1"></i>Editar</a>
+                                  <a class="dropdown-item" href="{% url 'activar_desactivar_tipo_solicitud' area.id %}"><i
+                                    class="bx bx-briefcase me-1"></i>{{area.estado|yesno:'Desactivar,Activar'}}</a>
+                                </div>
+                              </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

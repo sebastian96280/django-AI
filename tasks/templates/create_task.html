@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block contect%}
+Create task
+{{error}}
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button>
+        save
+    </button>
+</form>
+{% endblock %}

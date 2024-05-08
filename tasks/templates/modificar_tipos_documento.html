@@ -1,0 +1,29 @@
+{% extends 'base_2.html' %}
+
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Tipos de Documentos de Identificación /</span> Modificar
+</h4>
+<div class="row mb-4">
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Modificar Tipos de Documentos de Identificación</h5>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <p>
+                        <label for="id_nombre_tipo">Nombre del Tipo de Documento</label>
+                        <input type="text" name="nombre_tipo" class="form-control" placeholder="Doe" autofocus=""
+                            required="" id="id_nombre_tipo" value="{{tipo_documento.nombre_tipo}}">
+                    </p>
+                    <button type="submit" class="btn btn-primary me-2">
+                        <span class="tf-icons bx bxs-edit-alt me-1"></span> Modificar Tipo de Documento
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>     
+
+{% endblock %}

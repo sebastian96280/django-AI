@@ -1,0 +1,70 @@
+{% extends 'base_2.html' %}
+
+{% block contect%}
+<h4 class="py-3 mb-4">
+    <span class="text-muted fw-light">Solicitudes /</span> Consultar
+</h4>
+<div class="row mb-4">
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Consultar Solicitud</h5>
+            <div class="card-body">
+                <form method="get">
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary me-2">
+                        <span class="tf-icons bx bx-search-alt me-1"></span> Buscar
+                    </button>
+                </form>
+                <hr class="my-4">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md mb-4 mb-md-0">
+        <div class="card">
+            <h5 class="card-header">Resultado de Busqueda</h5>
+            <div class="card-body">
+                {% if error%}
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+                {% endif %}
+                {% if resultados %}
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Radicado</th>
+                                <th>Fecha de Radicado</th>
+                                <th>Fecha de Repuesta Oportuna</th>
+                                <th>Asunto</th>
+                                <th>Solicitud</th>
+                                <th>Estado</th>
+                                <th>Respuesta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resultado in resultados %}
+                            <tr>
+                                <td>{{ resultado.id }}</td>
+                                <td>{{ resultado.fecha_de_registro }}</td>
+                                <td>{{ resultado.fecha_de_respuesta_oportuna }}</td>
+                                <td>{{ resultado.asunto }}</td>
+                                <td><a href="{% url 'pdf_view' resultado.archivo.name|slice:'5:' %}" target="_blank">Click Para Ver</a></td>
+                                <td>{{ resultado.id_estado_solicitud.nombre_tipoS }}</td>
+                                {% if resultado.archivo_respuesta.name %}
+                                <td><a href="{% url 'pdf_view_res' resultado.archivo_respuesta.name|slice:'11:' %}" target="_blank">Click Para Ver</a></td>
+                                {% else %}
+                                <td>Respuesta pendiente por generar</td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

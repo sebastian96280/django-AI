@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+
+{% block contect%}
+Crear Activo
+{{error}}
+<form method="POST">
+    {% csrf_token %}
+
+    {{form.esta_activo}}
+
+    <button>
+        save
+    </button>
+</form>
+{% endblock %}

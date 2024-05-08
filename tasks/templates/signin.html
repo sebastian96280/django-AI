@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block contect%}
+<div class="container form-container">
+    <h2 class="my-4">Inicio de Sesión</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}        
+        
+        {% if error%}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+        {% endif %}
+        <div class="form-group">
+
+            <label for="id_username" class="form-label">Usuario:</label>
+            <input type="text" class="form-control" name="username" id="id_username" autofocus="" autocapitalize="none"
+                autocomplete="username" maxlength="150" required="" placeholder="Introduce el usuario"
+                oninput="this.style.backgroundColor = '#fff'; this.style.color = '#000';">
+
+            <label for="id_password" class="form-label">Contraseña:</label>
+            <input type="password" class="form-control" name="password" autocomplete="current-password" required=""
+                id="id_password" placeholder="Introduce el usuario"
+                oninput="this.style.backgroundColor = '#fff'; this.style.color = '#000';">
+        </div>
+        <button type="submit" class="btn btn-block">Iniciar Sesión</button>
+    </form>
+</div>
+{% endblock %}
