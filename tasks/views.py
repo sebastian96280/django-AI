@@ -462,7 +462,7 @@ def consulta_solicitudes(request):
     })
 
 def consulta_solicitudes_cerradas(request):
-    solicitudes = tSolicitud.objects.filter(id_esta_activo=2)
+    solicitudes = tSolicitud.objects.filter((~Q (id_area=None) & ~Q (id_tipo_solicitud=None)) & Q (id_esta_activo=2))
     return render(request, 'consulta_solicitudes_abi_cerr.html', {
         'solicitudes': solicitudes
     })
