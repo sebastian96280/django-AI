@@ -59,6 +59,7 @@ urlpatterns = [
     path('consultarRadicado/', views.consultar_radicados, name="consultar_radicados"),
 
     path('consulta_solicitudes_sin_clasificar/', views.consulta_solicitudes_sin_clasificar, name="consulta_solicitudes_sin_clasificar"),
+    path('editar_solicitud_area_tipo/<int:tipo_id>', views.editar_solicitud_area_tipo, name="editar_solicitud_area_tipo"),
 
     path('consultarSolicitud/', views.consulta_solicitudes, name="consultarSolicitud"),
     path('consulta_solicitudes_cerradas/', views.consulta_solicitudes_cerradas, name="consulta_solicitudes_cerradas"),
@@ -68,7 +69,7 @@ urlpatterns = [
     path('consulta_mis_solicitudes_cerradas/', views.consulta_mis_solicitudes_cerradas, name="consulta_mis_solicitudes_cerradas"),
     path('consulta_solicitudes_del_area/', views.consulta_solicitudes_del_area, name="consulta_solicitudes_del_area"),
     path('responder_solicitud/<int:tipo_id>', views.responder_solicitud, name="responder_solicitud"), 
-    path('editar_solicitud_area_tipo/<int:tipo_id>', views.editar_solicitud_area_tipo, name="editar_solicitud_area_tipo"),
+    
     path('modificar_solicitud_completa/<int:tipo_id>', views.modificar_solicitud_completa, name="modificar_solicitud_completa"),
     path('modificar_solicitud_usuario/<int:tipo_id>', views.modificar_solicitud_usuario, name="modificar_solicitud_usuario"),   
     
@@ -79,8 +80,7 @@ urlpatterns = [
     #IA
     path('ejecutar_IA/', views.ejecutar_IA_Tipo_Solicitud, name='ejecutar_IA'),
 
-    #vista de API
-    path('api/',include('tasks.urls'))
+    
     
     
 

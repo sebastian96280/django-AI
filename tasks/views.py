@@ -1,9 +1,8 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from .tasks import test_func
+
 import time
-from celery import shared_task
 import re
 from bs4 import BeautifulSoup
 from django.shortcuts import get_object_or_404, render, redirect
@@ -110,9 +109,7 @@ from .models import tSolicitud
 import random
 #requerir iniicio de sesión @login_required
 from django.contrib.auth.decorators import login_required
-def test(request):
-    test_func.delay()
-    return HttpResponse("Done")
+
 
 
 def home(request):
@@ -361,12 +358,17 @@ def creaSolicitud(request):
                 p.save()
                 # Aquí puedes guardar la ruta del archivo en tu objeto de solicitud si lo necesitas
                 nueva_solicitud.archivo.name = ruta_archivo
+                id_ia = ejecutar_IA_Tipo_Solicitud(asunto)
+                if id_ia != 0:
+                    id_tipo_solicitud = id_ia
+                    tipo_solicitud = get_object_or_404(tTipo_solicitud, pk=id_tipo_solicitud)
+                    nueva_solicitud.id_tipo_solicitud = tipo_solicitud                 
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                dividir_nombre_carpetaYarchivo.delay(nombre_archivo_cambiado)
+                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
-                preparar_IA.delay(ultimo_id)
+                preparar_IA(ultimo_id)
 
                 return render(request, 'crea_solicitud.html', {'form': tSolicitudForm(), 'confirmacion': 'Se ha recibido su solicitud. Pronto recibirá en su correo electrónico el número de radicado correspondiente, así como las instrucciones para consultar el estado de la misma.'})
             
@@ -375,23 +377,33 @@ def creaSolicitud(request):
                 nombre_archivo_cambiado = cambiar_nombre_archivo(nombre_archivo_original)
                 nueva_solicitud.archivo.name = nombre_archivo_cambiado
 
-
                 #Se envia el asunto al modelo IA para que nos retorne ID, si el ID es 0 quiere decir que la coincidencia es menor del 80%      
                 asunto = request.POST['asunto']
                 id_ia = ejecutar_IA_Tipo_Solicitud(asunto)
                 if id_ia != 0:
+                    #Se guarda la solicitud de acuerdo con el ID que determine la IA
                     id_tipo_solicitud = id_ia
                     tipo_solicitud = get_object_or_404(tTipo_solicitud, pk=id_tipo_solicitud)
                     nueva_solicitud.id_tipo_solicitud = tipo_solicitud 
+                    #Se guarda la solicitud con el estado Clasificada
+                    '''
+                    id_estado_solicitud = 4
+                    tipo_solicitud = get_object_or_404(tEstado_solicitud, pk=id_estado_solicitud)
+                    nueva_solicitud.id_estado_solicitud = tipo_solicitud
+                    '''
                 else:
-                     print("x")
-
+                    #Se guarda la solicitud con el estado Clasificación Manual
+                    '''
+                    id_estado_solicitud = 3
+                    tipo_solicitud = get_object_or_404(tEstado_solicitud, pk=id_estado_solicitud)
+                    nueva_solicitud.id_estado_solicitud = tipo_solicitud
+                    '''
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                dividir_nombre_carpetaYarchivo.delay(nombre_archivo_cambiado)
+                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
-                preparar_IA.delay(ultimo_id)           
+                preparar_IA(ultimo_id)           
             
 
             return render(request, 'crea_solicitud.html', {'form': tSolicitudForm(), 'confirmacion': 'Se ha recibido su solicitud. Pronto recibirá en su correo electrónico el número de radicado correspondiente, así como las instrucciones para consultar el estado de la misma.'})
@@ -565,7 +577,7 @@ def restabler_contrasena(request, usuario_id):
                 'error': 'Error al intentar cambiar la contraseña'
             })
 
-@shared_task
+
 def correo_restablecmiento_contrasena(usuario_id, nueva_contrasena):
     # Obtén el usuario por su ID
     usuario = User.objects.get(pk=usuario_id)
@@ -832,6 +844,12 @@ def editar_solicitud_area_tipo(request, tipo_id):
                 id_area=request.POST['id_area']
                 usuario = asignar_usuario_aleatorio(id_area)
                 nueva_solicitud.id_usuario = usuario
+
+                #Cambia el estado de la solicitud a Area Asignada.    
+                id_estado_solicitud = 5
+                tipo_solicitud = get_object_or_404(tEstado_solicitud, pk=id_estado_solicitud)
+                nueva_solicitud.id_estado_solicitud = tipo_solicitud    
+
                 nueva_solicitud.save()
             else:
                 print(form.errors)
@@ -1010,9 +1028,8 @@ def cambiar_nombre_archivo(nombre_archivo_original):
     return nombre_limpio
 
 
-@shared_task
+
 def dividir_nombre_carpetaYarchivo(nombre_archivo):
-    time.sleep(30)
     # Obtener el nombre de archivo sin la extensión
     nombre_archivo_tex = nombre_archivo
     nombre_pdf = nombre_archivo_tex
@@ -1118,20 +1135,14 @@ def pdf_view_res(request, nombre_del_pdf):
 # Crear una función que mantenga los 3 estados principales de IA (En proceso de clasificación,Clasificación manual,Clasificada)
 
 
-@shared_task
 def preparar_IA(ultimo_id):
     ultimo_objeto_almacenado = tSolicitud.objects.get(id=ultimo_id)
     # Obtener la instancia de tEstado_solicitud que quieres asignar
     estado_solicitud = tEstado_solicitud.objects.get(id=2)  # Reemplaza '2' con el ID que quieras
     # Cambiar el id_estado_solicitud del último objeto guardado
     ultimo_objeto_almacenado.id_estado_solicitud = estado_solicitud
-    ultimo_objeto_almacenado.save()
-    
-    #ejecutar_IA()
-    #entrenar_IA():
+    ultimo_objeto_almacenado.save()   
 
-
-@shared_task
 def ejecutar_IA_Tipo_Solicitud(asunto):
     modelo_svc = joblib.load('modelosIA/modelo_entrenado5.pkl')
     vectorizador_tfidf = joblib.load('modelosIA/vectorizador_tfidf5.pkl')
@@ -1146,19 +1157,18 @@ def ejecutar_IA_Tipo_Solicitud(asunto):
 
     # Verificar si la probabilidad máxima es menor que 0.8
     if max_probabilidad < 0.80:
-        resultado = "Tu valor personalizado"
+        print(probabilidades)
         return 0   
 
     else:
-        resultado = clase_predicha
         # Supongamos que 'le' es tu LabelEncoder que usaste para codificar las categorías
         le = LabelEncoder()
         tus_categorias = [1, 2]
         # Ajustar el LabelEncoder a tus categorías
         le.fit(tus_categorias)
-
         # Obtener la categoría original
-        categoria_predicha = le.inverse_transform([resultado])
+        categoria_predicha = le.inverse_transform([clase_predicha])
+        print(probabilidades)
         return categoria_predicha
   
 
@@ -1230,7 +1240,7 @@ def read_stopwords_from_file(file_path):
         return []
 
 
-@shared_task
+
 def mi_tarea():
     # Aquí va el código de tu tarea
     print("Ejecutando tarea...")
