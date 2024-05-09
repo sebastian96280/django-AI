@@ -1238,9 +1238,3 @@ def read_stopwords_from_file(file_path):
     except FileNotFoundError:
         print(f"El archivo {file_path} no se encontró.")
         return []
-
-
-
-def mi_tarea():
-    # Aquí va el código de tu tarea
-    print("Ejecutando tarea...")
