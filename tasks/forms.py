@@ -1,7 +1,6 @@
 from django.forms import ModelForm
 from django import forms
 # se importa la BD de .models para usarla como from
-from .models import Task
 from .models import tTipe_document
 from .models import tArea
 from .models import tEstado_solicitud
@@ -17,16 +16,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
 # mark_safe es una función de Django que marca una cadena como segura para su uso en HTML
-
 from django.utils.safestring import mark_safe
 
-# creamos una clase la cual nos permitira usar la tabla que creamos para la base datos como formulario, sin necesidad de crearlo desde cero
-
-
-class TaskForm(ModelForm):
-    class Meta:
-        model = Task
-        fields = ['title', 'description', 'important']
 
 
 class tDocumentoForm(ModelForm):

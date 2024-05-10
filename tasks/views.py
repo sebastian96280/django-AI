@@ -15,8 +15,6 @@ from io import BytesIO
 from datetime import datetime
 import pytz
 
-from .forms import TaskForm
-from .models import Task
 
 # importar formulario y modelo(BD) de usuario extendido
 from .forms import usuarioExtForm
@@ -150,14 +148,6 @@ def signup(request):
             'error': 'contraseña no coincide'
         })
 
-
-def tasks(request):
-    tasks = Task.objects.all()
-
-    return render(request, 'tasks.html', {
-                  'tasks': tasks})
-
-
 def singnin(request):
     if request.method == 'GET':
 
@@ -178,30 +168,6 @@ def singnin(request):
             return redirect('consultarSolicitud')
 
 # -------------------------------------- Funciones de creación --------------------------------------
-
-
-def create_task(request):
-    if request.method == 'GET':
-        return render(request, 'create_task.html', {
-            'form': TaskForm
-        })
-    else:
-        try:
-            print(request.POST)
-            form = TaskForm(request.POST)
-            # form.save(commit=False) es utilizada para crear una instancia del modelo (Task) con los datos del formulario, pero sin guardarla en la base de datos de inmediato. Esto se hace estableciendo commit=False. Luego, puedes realizar acciones adicionales en la instancia antes de guardarla definitivamente en la base de datos.
-            new_task = form.save(commit=False)
-            # se busca la request del usuario ya que desde el formulario no se envia, entonces se tiene que buscar por que lo requiere la tabla
-            new_task.user = request.user
-            new_task.save()
-            return render(request, 'create_task.html', {
-                'form': TaskForm})
-        except ValueError:
-            return render(request, 'create_task.html', {
-                'form': TaskForm,
-                'error': 'por favor provee datos validos'
-
-            })
 
 @login_required
 def crearUsuario(request):

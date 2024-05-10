@@ -10,20 +10,6 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
-
-
-# Creando modelos de bases de datos
-class Task(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-    datecompleted = models.DateTimeField(null=True)
-    important = models.BooleanField(default=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.title + '- by' + self.user.username
-
 # tabla tipo de documento
 class tTipe_document(models.Model):
     nombre_tipo = models.CharField(max_length=100)

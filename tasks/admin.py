@@ -1,7 +1,5 @@
 from django.contrib import admin
-from .models import Task
 from .models import tTipe_document
-
 from .models import tTipo_solicitud
 from .models import tEstado_solicitud
 from .models import tArea
@@ -13,7 +11,6 @@ class TaskAdmin(admin.ModelAdmin):
     readonly_fields=("created",)
 
 # Register your models here.
-admin.site.register(Task, TaskAdmin)
 admin.site.register(tTipe_document)
 admin.site.register(tTipo_solicitud) 
 admin.site.register(tEstado_solicitud) 
