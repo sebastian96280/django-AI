@@ -155,3 +155,20 @@ class tSolicitud(models.Model):
         email.fail_silently = False
         email.send()
 
+
+class configuracion_correo(models.Model):
+    email_backend = models.CharField(max_length=255)
+    email_host = models.CharField(max_length=255)
+    email_port = models.IntegerField()
+    email_host_user = models.CharField(max_length=255)
+    email_host_password = models.CharField(max_length=255)
+    email_use_tls = models.BooleanField()
+
+
+# ENVIO DE CORREOS
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_HOST_USER = 'jhoan.96280@gmail.com'
+#EMAIL_HOST_PASSWORD= 'ndmbsetlqjitdcrk'
+#EMAIL_USE_TLS = True

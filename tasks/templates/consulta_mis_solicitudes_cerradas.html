@@ -3,10 +3,10 @@
 
 {% block contect%}
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">Solicitudes /</span> Consultar Solicitudes Abiertas
+    <span class="text-muted fw-light">Solicitudes /</span> Consultar Mis Solicitudes Cerradas
 </h4>
 <div class="card">
-    <h5 class="card-header">Consultar Solicitudes Abiertas</h5>
+    <h5 class="card-header">Consultar Mis Solicitudes Cerradas</h5>
     <div class="card-body">
         {% if mensaje%}
         <div class="alert alert-success" role="alert">
@@ -28,6 +28,7 @@
                         <th>Usuario</th>
                         <th>Fecha de radicación</th>
                         <th>Fecha de respuesta oportuna</th>
+                        <th>Fecha de respuesta</th>
                         <th>Respuesta</th>
                         <th>Acciones</th>
                     </tr>
@@ -42,20 +43,23 @@
                             {{solicitud.nombre}} {{solicitud.apellidos}} </td>
                         <th>{{solicitud.correo}}</th>
                         <th>{{solicitud.asunto}}</th>
-                        <th><a href="{% url 'pdf_view' solicitud.archivo.name|slice:'5:' %}" target="_blank">Ver PDF</a></th>
+                        <td><a href="{% url 'pdf_view' solicitud.archivo.name|slice:'5:' %}" target="_blank">Ver PDF</a></td>
                         <th>{{solicitud.id_tipo_solicitud.nombre_solicitud}}</th>
                         <th>{{solicitud.id_area.nombre_area}}</th>
                         <th>{{solicitud.id_usuario}}</th>
                         <th>{{solicitud.fecha_de_registro}}</th>
                         <th>{{solicitud.fecha_de_respuesta_oportuna}}</th>
-                        </th>
+                        <th>{{solicitud.fecha_de_cierre}}</th>
+                        {% if solicitud.archivo_respuesta.name %}
+                        <td><a href="{% url 'pdf_view_res' solicitud.archivo_respuesta.name|slice:'11:' %}" target="_blank">Click Para Ver</a></td>
+                        {% else %}
+                        <td>Respuesta pendiente por generar</td>
+                        {% endif %}
                         <td>
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'modificar_solicitud_completa' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Modificar Solicitud</a>
-                                  <a class="dropdown-item" href="{% url 'editar_solicitud_area_tipo' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Clasificar Solicitud</a>
-                                  <a class="dropdown-item" href="{% url 'responder_solicitud' solicitud.id %}"><i class="bx bx-mail-send me-1"></i>Responder</a>
+                                  <a class="dropdown-item" href="{% url 'activar_solicitud' solicitud.id %}"><i class="bx bxs-user-circle me-1"></i>{{solicitud.id_esta_activo|yesno:'Re Abrir Solicitud,Desactivar'}}</a>
                                 </div>
                               </div>
                         </td>

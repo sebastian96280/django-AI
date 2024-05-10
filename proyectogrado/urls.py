@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path,include
 from tasks import views
 
+handler404 = views.error_404_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -68,7 +69,8 @@ urlpatterns = [
     path('consulta_mis_solicitudes_abiertas/', views.consulta_mis_solicitudes_abiertas, name="consulta_mis_solicitudes_abiertas"),
     path('consulta_mis_solicitudes_cerradas/', views.consulta_mis_solicitudes_cerradas, name="consulta_mis_solicitudes_cerradas"),
     path('consulta_solicitudes_del_area/', views.consulta_solicitudes_del_area, name="consulta_solicitudes_del_area"),
-    path('responder_solicitud/<int:tipo_id>', views.responder_solicitud, name="responder_solicitud"), 
+    path('responder_solicitud/<int:tipo_id>', views.responder_solicitud, name="responder_solicitud"),
+    path('activar_solicitud/<int:solicitud_id>', views.activar_solicitud, name="activar_solicitud"), 
     
     path('modificar_solicitud_completa/<int:tipo_id>', views.modificar_solicitud_completa, name="modificar_solicitud_completa"),
     path('modificar_solicitud_usuario/<int:tipo_id>', views.modificar_solicitud_usuario, name="modificar_solicitud_usuario"),   
@@ -79,6 +81,9 @@ urlpatterns = [
 
     #IA
     path('ejecutar_IA/', views.ejecutar_IA_Tipo_Solicitud, name='ejecutar_IA'),
+
+    #Configuración de correo
+    path('editar_configuracion_correo/', views.editar_configuracion_correo, name='editar_configuracion_correo'),
 
     
     

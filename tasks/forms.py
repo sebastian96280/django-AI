@@ -11,6 +11,7 @@ from .models import tTipo_solicitud
 from .models import tEstado_Activo
 from .models import usuarioExtendido
 from .models import tformatoSolicitud
+from .models import configuracion_correo
 
 # se importan los modelos necesario para extender el usuario(para no afectar el administrador de usuarios de django)
 from django.contrib.auth.models import User
@@ -346,3 +347,19 @@ class ConsultarRadicadosForm(forms.Form):
         required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     correo = forms.EmailField(required=False, widget=forms.EmailInput(
         attrs={'class': 'form-control'}))
+    
+
+class configuracionCorreoForm(ModelForm):
+
+    class Meta:
+        model = configuracion_correo
+        fields = ['email_backend', 'email_host','email_port','email_host_user','email_host_password','email_use_tls']
+
+        widgets = {
+            'email_backend': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'django.core.mail.backends.smtp.EmailBackend'}),
+            'email_host': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'smtp.gmail.com'}),
+            'email_port': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '1234567891'}),
+            'email_host_user': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'email@example.com'}),
+            'email_host_password': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '1234567891'}),
+            'email_use_tls': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }

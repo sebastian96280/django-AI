@@ -48,8 +48,11 @@ from .forms import tSolicitudFormAsignacionUsuario
 # importar formulario y modelo(BD) de crear estado activo
 from .forms import tEstadoActivoForm
 from .models import tEstado_Activo
-# importar para crear pdf.
+# importar formulario y modelo(BD) de configuración de correo
+from .forms import configuracionCorreoForm
+from .models import configuracion_correo
 
+# importar para crear pdf.
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 
@@ -111,6 +114,8 @@ import random
 from django.contrib.auth.decorators import login_required
 
 
+def error_404_view(request, exception):
+    return render(request, '404.html')
 
 def home(request):
     return render(request, 'home.html')
@@ -685,6 +690,25 @@ def activar_desactivar_area(request, area_id):
         'areas': areas  # Pasa los usuarios a la plantilla
     })
 
+def activar_solicitud(request, solicitud_id):
+    solicitudes = get_object_or_404(tSolicitud, pk=solicitud_id)
+    estado_activo = tEstado_Activo.objects.get(id=1)  # Asume que 1 es el estado activo
+    estado_solicitud = tEstado_solicitud.objects.get(id=5)
+    solicitudes.id_esta_activo = estado_activo
+    solicitudes.id_estado_solicitud = estado_solicitud
+    solicitudes.save()
+    estado = 'Re Abierta'
+    mensaje = 'Solicitud ' + str(solicitudes.id) +' ' + estado + ' con exito.'
+    # Vuelve a consultar las solicitudes
+    usuario_actual = request.user
+    solicitudes = tSolicitud.objects.filter(id_usuario=usuario_actual,id_esta_activo=2)                                          #<-------------------------pendiente cambiar consulta
+
+    return render(request, 'consulta_mis_solicitudes_cerradas.html', {
+        'mensaje': mensaje,
+        'solicitudes': solicitudes  # Pasa los usuarios a la plantilla
+    })
+
+
 
 # --------------------------------- Funciones de modificación---------------------------------
 def modificar_usuario(request, usuario_id):
@@ -1238,3 +1262,31 @@ def read_stopwords_from_file(file_path):
     except FileNotFoundError:
         print(f"El archivo {file_path} no se encontró.")
         return []
+    
+# --------------------------------- Funciones de configuración de Correo ---------------------------------------
+
+def editar_configuracion_correo(request):
+    config = configuracion_correo.objects.first()
+    if config is None:
+        config = configuracion_correo.objects.create(
+            email_backend = '',
+            email_host = '',
+            email_port = 0,
+            email_host_user = '',
+            email_host_password = '',
+            email_use_tls = True,
+        )  # Crea una nueva instancia
+
+    if request.method == 'POST':
+        form = configuracionCorreoForm(request.POST, instance=config)
+        if form.is_valid():
+            form.save()
+
+            confirmacion = 'Su Configuración Ha Sido Actualizada'
+            return render(request, 'editar_configuracion_correo.html', {'form': form,'confirmacion':confirmacion})
+    else:
+        form = configuracionCorreoForm(instance=config)
+
+    return render(request, 'editar_configuracion_correo.html', {'form': form})
+
+

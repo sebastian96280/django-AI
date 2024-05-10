@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'proyectogrado.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    #'default':  dj_database_url.config()
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default':  dj_database_url.config()
+    #'default': {
+    #    'ENGINE': 'django.db.backends.sqlite3',
+    #    'NAME': BASE_DIR / 'db.sqlite3',
+    #}
 }
 
     
@@ -131,9 +131,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 # Añade esta línea si no está en tu archivo settings.py
-#STATICFILES_DIRS = [
-#    BASE_DIR / 'proyectogrado' / 'static',
-#]
+STATICFILES_DIRS = [
+    BASE_DIR / 'proyectogrado' / 'static',
+]
 
 if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
