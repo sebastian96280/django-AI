@@ -136,7 +136,7 @@ def signup(request):
                 login(request, user)
 
                 # redireccionar a task.html
-                return redirect(tasks)
+                return redirect(creaTipoSolicitud)
             except IntegrityError:
                 return render(request, 'signup.html', {
                     'form': UserCreationForm,
@@ -169,7 +169,6 @@ def singnin(request):
 
 # -------------------------------------- Funciones de creación --------------------------------------
 
-@login_required
 def crearUsuario(request):
     if request.method == 'GET':
         return render(request, 'crea_usuario.html', {
