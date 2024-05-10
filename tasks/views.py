@@ -35,9 +35,6 @@ from .models import tArea
 # importar formulario y modelo(BD) de estado solicitud
 from .forms import tEstadoSForm
 from .models import tEstado_solicitud
-# importar formulario y modelo(BD) de estado usuario
-from .forms import tEstadoUForm
-from .models import tEstado_usuario
 # importar formulario y modelo(BD) de crear solicitud
 from .forms import tSolicitudForm
 from .models import tSolicitud
@@ -116,9 +113,6 @@ from django.contrib.auth.decorators import login_required
 
 def error_404_view(request, exception):
     return render(request, '404.html')
-
-def home(request):
-    return render(request, 'home.html')
 
 
 def signup(request):
@@ -209,7 +203,7 @@ def create_task(request):
 
             })
 
-
+@login_required
 def crearUsuario(request):
     if request.method == 'GET':
         return render(request, 'crea_usuario.html', {
@@ -226,7 +220,7 @@ def crearUsuario(request):
                 'form': form
             })
 
-
+@login_required
 def creaTdocumento(request):
     if request.method == 'GET':
         return render(request, 'crea_tipo_d.html', {
@@ -250,7 +244,7 @@ def creaTdocumento(request):
                 'form': form, 'error': 'Por favor, provee datos válidos'
             })
 
-
+@login_required
 def creaTipoSolicitud(request):
     if request.method == 'GET':
         return render(request, 'crea_tipo_solicitud.html', {
@@ -274,7 +268,7 @@ def creaTipoSolicitud(request):
                 'form': form, 'error': 'Por favor, provee datos válidos'
             })
 
-
+@login_required
 def creaTarea(request):
     if request.method == 'GET':
         return render(request, 'crea_area.html', {
@@ -298,7 +292,7 @@ def creaTarea(request):
                 'form': form, 'error': 'Por favor, provee datos válidos'
             })
 
-
+@login_required
 def creaEstadoS(request):
     if request.method == 'GET':
         return render(request, 'crea_estado_Sol.html', {
@@ -318,24 +312,6 @@ def creaEstadoS(request):
                 'form': form, 'error': 'Por favor, provee datos válidos'
             })
 
-
-def creaEstadoU(request):
-    if request.method == 'GET':
-        return render(request, 'crea_estado_Usua.html', {
-            'form': tEstadoUForm
-        })
-    else:
-        print(request.POST)
-        form = tEstadoUForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'crea_estado_Usua.html', {
-                'form': tEstadoUForm
-            })
-        else:
-            return render(request, 'crea_estado_Usua.html', {
-                'form': form, 'error': 'Por favor, provee datos válidos'
-            })
 
 def creaSolicitud(request):
     if request.method == 'GET':
@@ -459,6 +435,7 @@ def consulta_area(request):
         'areas': areas
     })
 
+@login_required
 def consulta_usuario(request):
     usuarios = usuarioExtendido.objects.all()
     return render(request, 'consulta_usuarios.html', {
@@ -472,18 +449,20 @@ def consulta_solicitudes_sin_clasificar(request):
         'solicitudes': solicitudes
     })
 
+@login_required
 def consulta_solicitudes(request):
     solicitudes = tSolicitud.objects.all()
     return render(request, 'consulta_solicitudes_abi_cerr.html', {
         'solicitudes': solicitudes
     })
 
+@login_required
 def consulta_solicitudes_cerradas(request):
     solicitudes = tSolicitud.objects.filter((~Q (id_area=None) & ~Q (id_tipo_solicitud=None)) & Q (id_esta_activo=2))
     return render(request, 'consulta_solicitudes_abi_cerr.html', {
         'solicitudes': solicitudes
     })
-
+@login_required
 def consulta_solicitudes_abiertas(request):
     solicitudes = tSolicitud.objects.filter(id_esta_activo=1)
     return render(request, 'consulta_solicitudes.html', {
@@ -563,7 +542,7 @@ def restabler_contrasena(request, usuario_id):
                 usuario.set_password(nueva_contrasena)
                 usuario.save()
 
-                correo_restablecmiento_contrasena.delay(usuario_id, nueva_contrasena)
+                correo_restablecmiento_contrasena(usuario_id, nueva_contrasena)
 
                 mensaje = 'Contraseña de ' + usuario.username + ' cambiado/a con exito.'
                 usuarios = usuarioExtendido.objects.all()
@@ -739,6 +718,7 @@ def modificar_usuario(request, usuario_id):
                 'form': form, 'usuario': usuario, 'documentos': documentos, 'areas': areas
         })
 
+@login_required
 def consulta_mi_usuario(request):
     usuario_actual = request.id
     usuarios = usuarioExtendido.objects.filter(id_usuario=usuario_actual)
@@ -773,8 +753,9 @@ def modificar_mi_usuario(request):
             print(form.errors)           
             return render(request, 'modificar_usuario.html', {
                 'form': form, 'usuario': usuario, 'documentos': documentos, 'areas': areas
-        })              
-        
+        })
+
+@login_required        
 def modificar_solicitud_completa(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)

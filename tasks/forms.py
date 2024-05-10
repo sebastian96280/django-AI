@@ -5,7 +5,6 @@ from .models import Task
 from .models import tTipe_document
 from .models import tArea
 from .models import tEstado_solicitud
-from .models import tEstado_usuario
 from .models import tSolicitud
 from .models import tTipo_solicitud
 from .models import tEstado_Activo
@@ -71,11 +70,6 @@ class tEstadoSForm(ModelForm):
         model = tEstado_solicitud
         fields = ['nombre_tipoS']
 
-
-class tEstadoUForm(ModelForm):
-    class Meta:
-        model = tEstado_usuario
-        fields = ['nombre_estado']
 
 class miUsuarioExtFormModificacion(ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'readonly': 'readonly'}), label="Correo")

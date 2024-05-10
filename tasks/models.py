@@ -13,8 +13,6 @@ from django.core.mail import EmailMultiAlternatives
 
 
 # Creando modelos de bases de datos
-
-
 class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -27,47 +25,51 @@ class Task(models.Model):
         return self.title + '- by' + self.user.username
 
 # tabla tipo de documento
-
-
 class tTipe_document(models.Model):
     nombre_tipo = models.CharField(max_length=100)
     estado = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nombre_tipo    
+
 # tabla tipo solicitud
-
-
 class tTipo_solicitud(models.Model):
     nombre_solicitud = models.CharField(max_length=100)
     estado = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.nombre_solicitud
+
 # tabla estado de solicitud
-
-
 class tEstado_solicitud(models.Model):
     nombre_tipoS = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.nombre_tipoS
+
 # tabla de areas de la compañia
-
-
 class tArea(models.Model):
     nombre_area = models.CharField(max_length=100)
     estado = models.BooleanField(default=True)
 
-# tabla de estado activo de todo
+    def __str__(self):
+        return self.nombre_area
 
-
+# tabla de estado activo de la solicitud
 class tEstado_Activo(models.Model):
     esta_activo = models.BooleanField()
 
-# tabla de estado del usuario(volver booleano 0 inactivo 1 para activo - NO SE PUEDE YA SE AÑADIO UN USUARIO O MIRAR COMO SE PUEDE HACER PARA REEMPLAZAR EL VALOR)
+    def __str__(self):
+        return str(self.esta_activo)
+    
+# tabla de formato de la solicitud
+class tformatoSolicitud(models.Model):
+    nombre_formato = models.CharField(max_length=100)
 
-
-class tEstado_usuario(models.Model):
-    nombre_estado = models.CharField(max_length=100)
-
+    def __str__(self):
+        return self.nombre_formato
 
 # tabla de usuarios de la compañia
-
-
 class usuarioExtendido(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     nombre_completo = models.CharField(max_length=100)
@@ -77,11 +79,7 @@ class usuarioExtendido(models.Model):
     id_area = models.ForeignKey(tArea, on_delete=models.CASCADE)
     esta_activo = models.BooleanField(default=True)
 
-
 # tabla de la solicitud
-class tformatoSolicitud(models.Model):
-    nombre_formato = models.CharField(max_length=100)
-
 class tSolicitud(models.Model):
     # datos usuario
     nombre = models.CharField(max_length=100, blank=True)

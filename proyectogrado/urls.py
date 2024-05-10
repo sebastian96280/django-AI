@@ -21,11 +21,9 @@ from tasks import views
 handler404 = views.error_404_view
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
-    path('home', views.home, name="home"),
     path('signup/', views.signup, name="signup"),
-    path('tasks/', views.tasks, name="tasks"),
-    path('tasks/create', views.create_task, name="create_task"),
 
     path('logout/', views.signout, name="logout"),
     path('signin/', views.singnin, name="signin"),
@@ -53,7 +51,6 @@ urlpatterns = [
     
     path('CrearActivo/', views.CrearActivo, name="CrearActivo"),
     path('creaEstadoS/', views.creaEstadoS, name="creaEstadoS"),
-    path('creaEstadoU/', views.creaEstadoU, name="creaEstadoU"),
     #path('', views.test, name="test"),
 
     path('', views.creaSolicitud, name="creaSolicitud"),

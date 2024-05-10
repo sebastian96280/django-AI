@@ -88,13 +88,7 @@ DATABASES = {
     #    'NAME': BASE_DIR / 'db.sqlite3',
     #}
 }
-
-    
-    
-    
-
-
-
+ 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -145,36 +139,6 @@ if not DEBUG:    # Tell Django to copy static assets into a path called `staticf
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Celery settings
-#CELERY_BROKER_URL = "redis://127.0.0.1:6379"
-#CELERY_ACCEPT_CONTENT =['application/json']
-#CELERY_RESULT_SERIALIZER = 'json'
-#CELERY_TASK_SERIALIZER = 'json'
-#CELERY_TIMEZONE = 'America/Bogota'
-#CELERY_RESULT_BACKEND = 'django-db'
-
-# APIO BEAT SCHEDULER 
-
-#CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-#CELERY_BEAT_SCHEDULE = {
-#    'ejecutar-mi-tarea-cada-5-minutos': {
-#        'task': 'tasks.views.mi_tarea',  # Asegúrate de usar la ruta correcta a tu tarea
-#        'schedule': timedelta(minutes=1),
-#    },
-#}
-
-# REDIS CACHE
-
-#CACHES = {
-#    "default": {
-#        "BACKEND": "django_redis.cache.RedisCache",
-#        "LOCATION": f"redis://127.0.0.1:6379/1",
-#        "OPTIONS": {
-#            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-#        },
-#    }
-#}
 
 # ENVIO DE CORREOS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
