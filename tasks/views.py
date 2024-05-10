@@ -1026,15 +1026,19 @@ def convertir_pdf_a_imagen(nombre_pdf, nombre_carpeta):
     ruta_proyecto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     pdf_path = os.path.join(ruta_proyecto, 'pdfs', nombre_pdf)
     output_folder = os.path.join(ruta_proyecto, 'pdfs', nombre_carpeta)
+
+    # Crear la carpeta de salida si no existe
+    os.makedirs(output_folder, exist_ok=True)
+
     # Convertir el PDF en una lista de imágenes
-    images = convert_from_path(
-        pdf_path, poppler_path=r'C:\Program Files (x86)\poppler-24.02.0\Library\bin')
+    images = convert_from_path(pdf_path)
 
     # Guardar cada imagen en la carpeta de salida
     for i, image in enumerate(images):
         image.save(f'{output_folder}/output_{i}.png', 'PNG')
 
     print(output_folder)
+
 
     extraer_texto_imagenes(output_folder)
 
