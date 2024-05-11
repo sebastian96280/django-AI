@@ -288,7 +288,7 @@ def creaSolicitud(request):
                 # Crea un objeto de archivo PDF
                 nombre_archivo_cambiado = cambiar_nombre_archivo('nombre_archivo_original.pdf')
                 ruta_archivo = os.path.join('pdfs/', nombre_archivo_cambiado)
-
+                print(ruta_archivo)
                 # Crea el objeto PDF, usando la ruta del archivo como su "archivo"
                 p = canvas.Canvas(ruta_archivo, pagesize=letter)
 
@@ -320,6 +320,7 @@ def creaSolicitud(request):
             elif request.POST['id_nombre_formato'] == '2':
                 nombre_archivo_original = nueva_solicitud.archivo.name
                 nombre_archivo_cambiado = cambiar_nombre_archivo(nombre_archivo_original)
+                print(nombre_archivo_cambiado)
                 nueva_solicitud.archivo.name = nombre_archivo_cambiado
 
                 #Se envia el asunto al modelo IA para que nos retorne ID, si el ID es 0 quiere decir que la coincidencia es menor del 80%      
