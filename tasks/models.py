@@ -120,7 +120,9 @@ class tSolicitud(models.Model):
         solicitante = self.nombre + " " + self.apellidos
         asunto = 'Radicado #'+str(self.id)+' radicado con exido - UDC'
         descripcion = self.mensaje
-        enlace = 'http://127.0.0.1:8000/consultarRadicado/?numero_identificacion='+self.numero_identificacion+'&correo='+self.correo
+        # Usa el nombre de dominio de tu aplicación en Render
+        dominio = settings.DOMINIO_RENDER
+        enlace = f'{dominio}/consultarRadicado/?numero_identificacion={self.numero_identificacion}&correo={self.correo}'
         plantilla_correo = render_to_string('plantilla_correo.html', {
             'radicado': radicado,
             'fecha_radicado': fecha_radicado,
