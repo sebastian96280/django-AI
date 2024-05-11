@@ -1084,7 +1084,7 @@ def limpiar_texto(texto):
 
 
 def pdf_view(request, nombre_del_pdf):
-    ruta_archivos = 'pdfs'
+    ruta_archivos = settings.MEDIA_ROOT
     ruta_completa = os.path.join(ruta_archivos, nombre_del_pdf)
     print(ruta_archivos)
     with open(ruta_completa, 'rb') as pdf:
