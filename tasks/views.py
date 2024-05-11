@@ -139,6 +139,7 @@ def crearUsuario(request):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def creaTdocumento(request):
     if request.method == 'GET':
         return render(request, 'crea_tipo_d.html', {
@@ -163,6 +164,7 @@ def creaTdocumento(request):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def creaTipoSolicitud(request):
     if request.method == 'GET':
         return render(request, 'crea_tipo_solicitud.html', {
@@ -187,6 +189,7 @@ def creaTipoSolicitud(request):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def creaTarea(request):
     if request.method == 'GET':
         return render(request, 'crea_area.html', {
@@ -294,6 +297,7 @@ def creaSolicitud(request):
 # consultar tipo de documento
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_tipoDocumento(request):
     tipos_documento = tTipe_document.objects.all()
     return render(request, 'consulta_tipos_documento.html', {
@@ -301,6 +305,7 @@ def consulta_tipoDocumento(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_tipoSolicitud(request):
     tipos_solicitudes = tTipo_solicitud.objects.all()
     return render(request, 'consulta_tipos_solicitudes.html', {
@@ -308,6 +313,7 @@ def consulta_tipoSolicitud(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_area(request):
     areas = tArea.objects.all()
     return render(request, 'consulta_area.html', {
@@ -315,6 +321,7 @@ def consulta_area(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_usuario(request):
     usuarios = usuarioExtendido.objects.all()
     return render(request, 'consulta_usuarios.html', {
@@ -322,6 +329,7 @@ def consulta_usuario(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_solicitudes_sin_clasificar(request):
     solicitudes = tSolicitud.objects.filter(Q (id_area=None) | Q (id_tipo_solicitud=None))
     return render(request, 'consulta_solicitudes_sin_clasificar.html', {
@@ -329,6 +337,7 @@ def consulta_solicitudes_sin_clasificar(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_solicitudes(request):
     solicitudes = tSolicitud.objects.all()
     return render(request, 'consulta_solicitudes_abi_cerr.html', {
@@ -336,12 +345,14 @@ def consulta_solicitudes(request):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_solicitudes_cerradas(request):
     solicitudes = tSolicitud.objects.filter((~Q (id_area=None) & ~Q (id_tipo_solicitud=None)) & Q (id_esta_activo=2))
     return render(request, 'consulta_solicitudes_abi_cerr.html', {
         'solicitudes': solicitudes
     })
 @login_required
+@user_passes_test(es_superusuario)
 def consulta_solicitudes_abiertas(request):
     solicitudes = tSolicitud.objects.filter(id_esta_activo=1)
     return render(request, 'consulta_solicitudes.html', {
@@ -408,6 +419,7 @@ def consultar_radicados(request):
 
 # --------------------------------- Funciones de Restablecer contraseña Usuario ---------------------
 @login_required
+@user_passes_test(es_superusuario)
 def restabler_contrasena(request, usuario_id):
     if request.method == 'GET':
         usuario = get_object_or_404(User, pk=usuario_id)
@@ -441,6 +453,7 @@ def restabler_contrasena(request, usuario_id):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def correo_restablecmiento_contrasena(usuario_id, nueva_contrasena):
     # Obtén el usuario por su ID
     usuario = User.objects.get(pk=usuario_id)
@@ -492,6 +505,7 @@ def correo_respuesta_solicitud(id_solicitud):
 # --------------------------------- Funciones de Activar Desactivar ---------------------------------
 
 @login_required
+@user_passes_test(es_superusuario)
 def activar_desactivar_usuario(request, usuario_id):
     usuario = get_object_or_404(usuarioExtendido, pk=usuario_id)
     usuario.esta_activo = not usuario.esta_activo
@@ -509,6 +523,7 @@ def activar_desactivar_usuario(request, usuario_id):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def activar_desactivar_tipo_documento(request, tipod_id):
     tipo_documento = get_object_or_404(tTipe_document, pk=tipod_id)
     tipo_documento.estado = not tipo_documento.estado
@@ -524,6 +539,7 @@ def activar_desactivar_tipo_documento(request, tipod_id):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def activar_desactivar_tipo_solicitud(request, tipod_id):
     tipo_solicitud = get_object_or_404(tTipo_solicitud, pk=tipod_id)
     tipo_solicitud.estado = not tipo_solicitud.estado
@@ -539,6 +555,7 @@ def activar_desactivar_tipo_solicitud(request, tipod_id):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def activar_desactivar_area(request, area_id):
     area = get_object_or_404(tArea, pk=area_id)
     area.estado = not area.estado
@@ -554,6 +571,7 @@ def activar_desactivar_area(request, area_id):
     })
 
 @login_required
+@user_passes_test(es_superusuario)
 def activar_solicitud(request, solicitud_id):
     solicitudes = get_object_or_404(tSolicitud, pk=solicitud_id)
     estado_activo = tEstado_Activo.objects.get(id=1)  # Asume que 1 es el estado activo
@@ -576,6 +594,7 @@ def activar_solicitud(request, solicitud_id):
 
 # --------------------------------- Funciones de modificación---------------------------------
 @login_required
+@user_passes_test(es_superusuario)
 def modificar_usuario(request, usuario_id):
     documentos = tTipe_document.objects.all()
     areas = tArea.objects.all()
@@ -641,7 +660,8 @@ def modificar_mi_usuario(request):
                 'form': form, 'usuario': usuario, 'documentos': documentos, 'areas': areas
         })
 
-@login_required        
+@login_required
+@user_passes_test(es_superusuario)        
 def modificar_solicitud_completa(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -671,6 +691,7 @@ def modificar_solicitud_completa(request, tipo_id):
             })
         
 @login_required
+@user_passes_test(es_superusuario)
 def modificar_solicitud_usuario(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -701,6 +722,7 @@ def modificar_solicitud_usuario(request, tipo_id):
             })
         
 @login_required
+@user_passes_test(es_superusuario)
 def asignar_usuario_aleatorio(area_id):
     # Obtén el objeto tArea correspondiente al id dado
     area = get_object_or_404(tArea, id=area_id)
@@ -718,6 +740,7 @@ def asignar_usuario_aleatorio(area_id):
     return usuario_aleatorio.user
 
 @login_required
+@user_passes_test(es_superusuario)
 def editar_solicitud_area_tipo(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -818,6 +841,7 @@ def responder_solicitud(request, tipo_id):
 
 
 @login_required
+@user_passes_test(es_superusuario)
 def modificar_tipo_documento(request, tipo_id):
     if request.method == 'GET':
         tipo_documento = get_object_or_404(tTipe_document, pk=tipo_id)
@@ -846,6 +870,7 @@ def modificar_tipo_documento(request, tipo_id):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def modificar_tipo_solicitud(request, tipo_id):
     if request.method == 'GET':
         tipo_solictud = get_object_or_404(tTipo_solicitud, pk=tipo_id)
@@ -874,6 +899,7 @@ def modificar_tipo_solicitud(request, tipo_id):
             })
 
 @login_required
+@user_passes_test(es_superusuario)
 def modificar_area(request, area_id):
     if request.method == 'GET':
         area = get_object_or_404(tArea, pk=area_id)
@@ -1042,7 +1068,7 @@ def limpiar_texto(texto):
 
 # --------------------------------- Lector de PDF solicitudes ---------------------------------------
 
-
+@login_required
 def pdf_view(request, nombre_del_pdf):
     ruta_archivos = 'pdfs/'
     ruta_completa = os.path.join(settings.MEDIA_ROOT,ruta_archivos, nombre_del_pdf)
@@ -1056,7 +1082,7 @@ def pdf_view(request, nombre_del_pdf):
 
 
 # --------------------------------- Lector de PDF respuestas ---------------------------------------
-
+@login_required
 def pdf_view_res(request, nombre_del_pdf):
     ruta_archivos = 'respuestas/'
     ruta_completa = os.path.join(settings.MEDIA_ROOT,ruta_archivos, nombre_del_pdf)
