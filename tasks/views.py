@@ -1,7 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-
 import time
 import re
 from bs4 import BeautifulSoup
@@ -15,10 +14,7 @@ from io import BytesIO
 from datetime import datetime
 import pytz
 from django.conf import settings
-
 from django.core.files import File
-
-
 # importar formulario y modelo(BD) de usuario extendido
 from .forms import usuarioExtForm
 from .models import usuarioExtendido
@@ -33,8 +29,6 @@ from .models import tTipo_solicitud
 # importar formulario y modelo(BD) de area
 from .forms import tAreaForm
 from .models import tArea
-# importar formulario y modelo(BD) de estado solicitud
-from .forms import tEstadoSForm
 from .models import tEstado_solicitud
 # importar formulario y modelo(BD) de crear solicitud
 from .forms import tSolicitudForm
@@ -44,30 +38,22 @@ from .forms import tSolicitudFormModificacionAreaTipo
 from .forms import tSolicitudFormModificacionAll
 from .forms import tSolicitudFormAsignacionUsuario
 # importar formulario y modelo(BD) de crear estado activo
-from .forms import tEstadoActivoForm
 from .models import tEstado_Activo
 # importar formulario y modelo(BD) de configuración de correo
 from .forms import configuracionCorreoForm
 from .models import configuracion_correo
-
 # importar para crear pdf.
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-
-
 # importar form para buscar radicados
 from .forms import ConsultarRadicadosForm
 # permitir realizar 2 consultas a la vez
 from django.db.models import Q
-
 # manipulador del os
 import os
 import shutil
-
 # importar pdf
 from django.http import FileResponse
-
-
 # crea pdf a imagen.
 from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
@@ -77,7 +63,6 @@ from pdf2image.exceptions import (
 )
 # modificación archivos alfanumericos
 import uuid
-
 # convertir imagenes a texto.
 from PIL import Image
 import pytesseract
@@ -114,45 +99,8 @@ from django.contrib.auth.decorators import login_required
 def error_404_view(request, exception):
     return render(request, '404.html')
 
-
-def signup(request):
-    title = 'variable'
-
-    if request.method == 'GET':
-        print('enviando formulario')
-        return render(request, 'signup.html', {
-            'mytitle': title,
-            'form': UserCreationForm
-        })
-    else:
-        print('obteniendo datos')
-        print(request.POST)
-        if request.POST['password1'] == request.POST['password2']:
-            try:
-                # guardamos al usuario en el objeto user para registrarlo
-                user = User.objects.create_user(username=request.POST['username'],
-                                                password=request.POST['password1'])
-                user.save()
-
-                # crear la sesión del usuario
-                login(request, user)
-
-                # redireccionar a task.html
-                return redirect(creaTipoSolicitud)
-            except IntegrityError:
-                return render(request, 'signup.html', {
-                    'form': UserCreationForm,
-                    'error': 'error el usuario existe'
-                })
-
-        return render(request, 'signup.html', {
-            'form': UserCreationForm,
-            'error': 'contraseña no coincide'
-        })
-
 def singnin(request):
     if request.method == 'GET':
-
         return render(request, 'inicio_sesion.html', {
             'form': AuthenticationForm
         })
@@ -167,10 +115,11 @@ def singnin(request):
         else:
             # crear la sesión del usuario
             login(request, user)
-            return redirect('consultarSolicitud')
+            return redirect('consulta_mis_solicitudes')
 
 # -------------------------------------- Funciones de creación --------------------------------------
 
+@login_required
 def crearUsuario(request):
     if request.method == 'GET':
         return render(request, 'crea_usuario.html', {
@@ -259,27 +208,6 @@ def creaTarea(request):
                 'form': form, 'error': 'Por favor, provee datos válidos'
             })
 
-@login_required
-def creaEstadoS(request):
-    if request.method == 'GET':
-        return render(request, 'crea_estado_Sol.html', {
-            'form': tEstadoSForm
-        })
-    else:
-        print(request.POST)
-        form = tEstadoSForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'crea_estado_Sol.html', {
-                'form': tEstadoSForm,
-                'error': 'creado exitosamente'
-            })
-        else:
-            return render(request, 'crea_estado_Sol.html', {
-                'form': form, 'error': 'Por favor, provee datos válidos'
-            })
-
-
 def creaSolicitud(request):
     if request.method == 'GET':
         return render(request, 'crea_solicitud.html', {'form': tSolicitudForm()})
@@ -291,7 +219,7 @@ def creaSolicitud(request):
                 # Crea un objeto de archivo PDF
                 nombre_archivo_cambiado = cambiar_nombre_archivo('nombre_archivo_original.pdf')
                 ruta_archivo = nombre_archivo_cambiado
-                # Crea el objeto PDF, usando la ruta del archivo como su "archivo"
+                # Crea el objeto PDF, usando la ruta del archivo
                 p = canvas.Canvas(ruta_archivo, pagesize=letter)
 
                 # Dibuja cosas en el PDF. Aquí es donde comienza la generación del PDF.
@@ -300,10 +228,10 @@ def creaSolicitud(request):
                 p.drawString(100, 750, "Asunto: " + asunto)
                 p.drawString(100, 730, "Mensaje: " + mensaje)
 
-                # Cierra el objeto PDF limpiamente y termina la página.
+                # Cierra el objeto PDF y termina la página.
                 p.showPage()
                 p.save()
-                # Aquí puedes guardar la ruta del archivo en tu objeto de solicitud si lo necesitas
+                # Almacena el PDF
                 with open(ruta_archivo, 'rb') as f:
                     nueva_solicitud.archivo.save(nombre_archivo_cambiado, File(f))
                 id_ia = ejecutar_IA_Tipo_Solicitud(asunto)
@@ -352,51 +280,31 @@ def creaSolicitud(request):
                 ultimo_objeto = tSolicitud.objects.latest('id')
                 #dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
-                preparar_IA(ultimo_id)           
-            
-
+                preparar_IA(ultimo_id)        
             return render(request, 'crea_solicitud.html', {'form': tSolicitudForm(), 'confirmacion': 'Se ha recibido su solicitud. Pronto recibirá en su correo electrónico el número de radicado correspondiente, así como las instrucciones para consultar el estado de la misma.'})
         else:
             return render(request, 'crea_solicitud.html', {'form': form, 'error': 'Por favor, provee datos válidos'})
 
 
-
-def CrearActivo(request):
-    if request.method == 'GET':
-        return render(request, 'crear_activo.html', {
-            'form': tEstadoActivoForm
-        })
-    else:
-        form = tEstadoActivoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return render(request, 'crear_activo.html', {
-                'form': tEstadoActivoForm
-            })
-        else:
-            return render(request, 'crear_activo.html', {
-                'form': form, 'error': 'Por favor, provee datos válidos'
-            })
-
 # --------------------------------- Funciones de consulta---------------------------------
 
 # consultar tipo de documento
 
-
+@login_required
 def consulta_tipoDocumento(request):
     tipos_documento = tTipe_document.objects.all()
     return render(request, 'consulta_tipos_documento.html', {
         'tipos_documento': tipos_documento
     })
 
-
+@login_required
 def consulta_tipoSolicitud(request):
     tipos_solicitudes = tTipo_solicitud.objects.all()
     return render(request, 'consulta_tipos_solicitudes.html', {
         'tipos_solicitudes': tipos_solicitudes
     })
 
-
+@login_required
 def consulta_area(request):
     areas = tArea.objects.all()
     return render(request, 'consulta_area.html', {
@@ -496,7 +404,7 @@ def consultar_radicados(request):
 
 
 # --------------------------------- Funciones de Restablecer contraseña Usuario ---------------------
-
+@login_required
 def restabler_contrasena(request, usuario_id):
     if request.method == 'GET':
         usuario = get_object_or_404(User, pk=usuario_id)
@@ -529,7 +437,7 @@ def restabler_contrasena(request, usuario_id):
                 'error': 'Error al intentar cambiar la contraseña'
             })
 
-
+@login_required
 def correo_restablecmiento_contrasena(usuario_id, nueva_contrasena):
     # Obtén el usuario por su ID
     usuario = User.objects.get(pk=usuario_id)
@@ -553,12 +461,14 @@ def correo_restablecmiento_contrasena(usuario_id, nueva_contrasena):
     email.fail_silently = False
     email.send()
 
+@login_required
 def correo_respuesta_solicitud(id_solicitud):
     usuario = tSolicitud.objects.get(pk=id_solicitud)
     radicado = usuario.id
     correo = usuario.correo
     fecha_radicado = usuario.fecha_de_registro
-    enlace = 'http://127.0.0.1:8000/consultarRadicado/?numero_identificacion='+usuario.numero_identificacion+'&correo='+usuario.correo
+    dominio = settings.DOMINIO_RENDER
+    enlace = f'{dominio}/consultarRadicado/?numero_identificacion={usuario.numero_identificacion}&correo={usuario.correo}'
     asunto = 'Respuesta Radicado #' + str(radicado) + '- Plataforma UDC'
 
     plantilla_correo = render_to_string('plantilla_correo_respuesta_solicitud.html', {
@@ -578,7 +488,7 @@ def correo_respuesta_solicitud(id_solicitud):
 
 # --------------------------------- Funciones de Activar Desactivar ---------------------------------
 
-
+@login_required
 def activar_desactivar_usuario(request, usuario_id):
     usuario = get_object_or_404(usuarioExtendido, pk=usuario_id)
     usuario.esta_activo = not usuario.esta_activo
@@ -595,6 +505,7 @@ def activar_desactivar_usuario(request, usuario_id):
         'usuarios': usuarios  # Pasa los usuarios a la plantilla
     })
 
+@login_required
 def activar_desactivar_tipo_documento(request, tipod_id):
     tipo_documento = get_object_or_404(tTipe_document, pk=tipod_id)
     tipo_documento.estado = not tipo_documento.estado
@@ -606,9 +517,10 @@ def activar_desactivar_tipo_documento(request, tipod_id):
 
     return render(request, 'consulta_tipos_documento.html', {
         'mensaje': mensaje,
-        'tipos_documento': tipos_documento  # Pasa los usuarios a la plantilla
+        'tipos_documento': tipos_documento  # Pasa los tipos de documento a la plantilla
     })
 
+@login_required
 def activar_desactivar_tipo_solicitud(request, tipod_id):
     tipo_solicitud = get_object_or_404(tTipo_solicitud, pk=tipod_id)
     tipo_solicitud.estado = not tipo_solicitud.estado
@@ -623,6 +535,7 @@ def activar_desactivar_tipo_solicitud(request, tipod_id):
         'tipos_solicitudes': tipos_solicitudes  # Pasa los usuarios a la plantilla
     })
 
+@login_required
 def activar_desactivar_area(request, area_id):
     area = get_object_or_404(tArea, pk=area_id)
     area.estado = not area.estado
@@ -634,9 +547,10 @@ def activar_desactivar_area(request, area_id):
 
     return render(request, 'consulta_area.html', {
         'mensaje': mensaje,
-        'areas': areas  # Pasa los usuarios a la plantilla
+        'areas': areas  # Pasa las areas a la plantilla
     })
 
+@login_required
 def activar_solicitud(request, solicitud_id):
     solicitudes = get_object_or_404(tSolicitud, pk=solicitud_id)
     estado_activo = tEstado_Activo.objects.get(id=1)  # Asume que 1 es el estado activo
@@ -658,6 +572,7 @@ def activar_solicitud(request, solicitud_id):
 
 
 # --------------------------------- Funciones de modificación---------------------------------
+@login_required
 def modificar_usuario(request, usuario_id):
     documentos = tTipe_document.objects.all()
     areas = tArea.objects.all()
@@ -710,11 +625,11 @@ def modificar_mi_usuario(request):
         form = miUsuarioExtFormModificacion(request.POST, instance=usuario)
         if form.is_valid():            
             form.save()
-            usuarios = usuarioExtendido.objects.all()
+            solicitudes = tSolicitud.objects.filter(id_usuario=usuario_actual)
             estado = 'Modificado'
             mensaje = 'Usuario  ' + str(usuario.id)+' ' + estado + ' con exito.'
-            return render(request, 'consulta_usuarios.html', {
-            'usuarios': usuarios, 'mensaje': mensaje
+            return render(request, 'consulta_mis_solicitudes.html', {
+            'usuarios': solicitudes, 'mensaje': mensaje
         })
 
         else:
@@ -737,15 +652,13 @@ def modificar_solicitud_completa(request, tipo_id):
             form = tSolicitudFormModificacionAll(request.POST, instance=solicitud)
             if form.is_valid():
                 form.save()
-            else:
-                print(form.errors)
             estado = 'Modificado'
             mensaje = 'Número radicado  ' + str(solicitud.id)+' ' + estado + ' con exito.'
             # Vuelve a consultar el modelo
             solicitudes = tSolicitud.objects.all()
             return render(request, 'consulta_solicitudes.html', {
                 'mensaje': mensaje,
-                'solicitudes': solicitudes  # Pasa los usuarios a la plantilla
+                'solicitudes': solicitudes  # Pasa las solicitudes a la plantilla
             })
         except ValueError:
             print(form.errors)
@@ -753,6 +666,7 @@ def modificar_solicitud_completa(request, tipo_id):
                 'solicitudes': solicitudes, 'form': form,
                 'error': 'Error al actualizar tipos de documento'
             })
+        
 @login_required
 def modificar_solicitud_usuario(request, tipo_id):
     if request.method == 'GET':
@@ -767,8 +681,7 @@ def modificar_solicitud_usuario(request, tipo_id):
             form = tSolicitudFormAsignacionUsuario(request.POST, instance=solicitud)
             if form.is_valid():
                 form.save()
-            else:
-                print(form.errors)
+
             estado = 'Modificado'
             mensaje = 'Número radicado  ' + str(solicitud.id)+' ' + estado + ' con exito.'
             # Vuelve a consultar el modelo
@@ -783,7 +696,8 @@ def modificar_solicitud_usuario(request, tipo_id):
                 'solicitudes': solicitudes, 'form': form,
                 'error': 'Error al actualizar tipos de documento'
             })
-
+        
+@login_required
 def asignar_usuario_aleatorio(area_id):
     # Obtén el objeto tArea correspondiente al id dado
     area = get_object_or_404(tArea, id=area_id)
@@ -800,6 +714,7 @@ def asignar_usuario_aleatorio(area_id):
 
     return usuario_aleatorio.user
 
+@login_required
 def editar_solicitud_area_tipo(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -832,7 +747,7 @@ def editar_solicitud_area_tipo(request, tipo_id):
             solicitudes = tSolicitud.objects.all()
             return render(request, 'consulta_solicitudes.html', {
                 'mensaje': mensaje,
-                'solicitudes': solicitudes  # Pasa los usuarios a la plantilla
+                'solicitudes': solicitudes  # Pasa las solicitudes a la plantilla
             })
         except ValueError:
             print(form.errors)
@@ -840,7 +755,8 @@ def editar_solicitud_area_tipo(request, tipo_id):
                 'mensaje': form.errors, 'form': form,
                 'error': 'Error al actualizar tipos de documento'
             })
-
+        
+@login_required
 def responder_solicitud(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -883,9 +799,10 @@ def responder_solicitud(request, tipo_id):
             estado = 'Respondido'
             mensaje = 'Número radicado  ' + str(solicitud.id)+' ' + estado + ' con exito.'
             # Vuelve a consultar el modelo
-            solicitudes = tSolicitud.objects.all()
+            usuario_actual = request.user
+            solicitudes = tSolicitud.objects.filter(id_usuario=usuario_actual,id_esta_activo=2)
 
-            return render(request, 'consulta_solicitudes.html', {
+            return render(request, 'consulta_mis_solicitudes_cerradas.html', {
                 'mensaje': mensaje,
                 'solicitudes': solicitudes  # Pasa los usuarios a la plantilla
             })
@@ -896,6 +813,8 @@ def responder_solicitud(request, tipo_id):
                 'error': 'Error al actualizar tipos de documento'
             })
 
+
+@login_required
 def modificar_tipo_documento(request, tipo_id):
     if request.method == 'GET':
         tipo_documento = get_object_or_404(tTipe_document, pk=tipo_id)
@@ -915,7 +834,7 @@ def modificar_tipo_documento(request, tipo_id):
 
             return render(request, 'consulta_tipos_documento.html', {
                 'mensaje': mensaje,
-                'tipos_documento': tipos_documento  # Pasa los usuarios a la plantilla
+                'tipos_documento': tipos_documento  # Pasa los tipos de documento a la plantilla
             })
         except ValueError:
             return render(request, 'modificar_tipos_documento.html', {
@@ -923,7 +842,7 @@ def modificar_tipo_documento(request, tipo_id):
                 'error': 'Error al actualizar tipos de documento'
             })
 
-
+@login_required
 def modificar_tipo_solicitud(request, tipo_id):
     if request.method == 'GET':
         tipo_solictud = get_object_or_404(tTipo_solicitud, pk=tipo_id)
@@ -951,7 +870,7 @@ def modificar_tipo_solicitud(request, tipo_id):
                 'error': 'Error actualizar tipos de documento'
             })
 
-
+@login_required
 def modificar_area(request, area_id):
     if request.method == 'GET':
         area = get_object_or_404(tArea, pk=area_id)
@@ -1102,8 +1021,8 @@ def pdf_view(request, nombre_del_pdf):
 # --------------------------------- Lector de PDF respuestas ---------------------------------------
 
 def pdf_view_res(request, nombre_del_pdf):
-    ruta_archivos = 'respuestas'
-    ruta_completa = os.path.join(ruta_archivos, nombre_del_pdf)
+    ruta_archivos = 'respuestas/'
+    ruta_completa = os.path.join(settings.MEDIA_ROOT,ruta_archivos, nombre_del_pdf)
     with open(ruta_completa, 'rb') as pdf:
         pdf_data = pdf.read()
     response = HttpResponse(pdf_data, content_type='application/pdf')
@@ -1122,6 +1041,7 @@ def preparar_IA(ultimo_id):
     ultimo_objeto_almacenado.id_estado_solicitud = estado_solicitud
     ultimo_objeto_almacenado.save()   
 
+@login_required
 def ejecutar_IA_Tipo_Solicitud(asunto):
     modelo_svc = joblib.load('modelosIA/modelo_entrenado5.pkl')
     vectorizador_tfidf = joblib.load('modelosIA/vectorizador_tfidf5.pkl')

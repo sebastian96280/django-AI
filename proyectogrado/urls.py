@@ -23,7 +23,6 @@ handler404 = views.error_404_view
 urlpatterns = [
 
     path('admin/', admin.site.urls),
-    path('signup/', views.signup, name="signup"),
 
     path('logout/', views.signout, name="logout"),
     path('signin/', views.singnin, name="signin"),
@@ -49,8 +48,7 @@ urlpatterns = [
     path('areas/<int:area_id>', views.modificar_area, name="ModificarArea"),    
     path('activar_desactivar_area/<int:area_id>', views.activar_desactivar_area, name="activar_desactivar_area"),
     
-    path('CrearActivo/', views.CrearActivo, name="CrearActivo"),
-    path('creaEstadoS/', views.creaEstadoS, name="creaEstadoS"),
+    
     #path('', views.test, name="test"),
 
     path('', views.creaSolicitud, name="creaSolicitud"),

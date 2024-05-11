@@ -49,17 +49,10 @@ class tAreaForm(ModelForm):
             'estado': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-
 class tEstadoActivoForm(ModelForm):
     class Meta:
         model = tEstado_Activo
         fields = ['esta_activo']
-
-
-class tEstadoSForm(ModelForm):
-    class Meta:
-        model = tEstado_solicitud
-        fields = ['nombre_tipoS']
 
 
 class miUsuarioExtFormModificacion(ModelForm):
