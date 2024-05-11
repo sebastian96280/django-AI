@@ -16,6 +16,9 @@ from datetime import datetime
 import pytz
 from django.conf import settings
 
+from django.core.files import File
+
+
 # importar formulario y modelo(BD) de usuario extendido
 from .forms import usuarioExtForm
 from .models import usuarioExtendido
@@ -287,7 +290,7 @@ def creaSolicitud(request):
             if request.POST['id_nombre_formato'] == '1':
                 # Crea un objeto de archivo PDF
                 nombre_archivo_cambiado = cambiar_nombre_archivo('nombre_archivo_original.pdf')
-                ruta_archivo = os.path.join('pdfs/', nombre_archivo_cambiado)
+                ruta_archivo = nombre_archivo_cambiado
                 # Crea el objeto PDF, usando la ruta del archivo como su "archivo"
                 p = canvas.Canvas(ruta_archivo, pagesize=letter)
 
@@ -301,12 +304,14 @@ def creaSolicitud(request):
                 p.showPage()
                 p.save()
                 # Aquí puedes guardar la ruta del archivo en tu objeto de solicitud si lo necesitas
-                nueva_solicitud.archivo.name = ruta_archivo
+                with open(ruta_archivo, 'rb') as f:
+                    nueva_solicitud.archivo.save(nombre_archivo_cambiado, File(f))
                 id_ia = ejecutar_IA_Tipo_Solicitud(asunto)
                 if id_ia != 0:
                     id_tipo_solicitud = id_ia
                     tipo_solicitud = get_object_or_404(tTipo_solicitud, pk=id_tipo_solicitud)
-                    nueva_solicitud.id_tipo_solicitud = tipo_solicitud                 
+                    nueva_solicitud.id_tipo_solicitud = tipo_solicitud
+                print(nueva_solicitud.archivo.name)                 
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
@@ -318,9 +323,8 @@ def creaSolicitud(request):
             
             elif request.POST['id_nombre_formato'] == '2':
                 nombre_archivo_original = nueva_solicitud.archivo.name
-                nombre_archivo_cambiado = cambiar_nombre_archivo(nombre_archivo_original)
-                ruta_archivo = os.path.join('pdfs/', nombre_archivo_cambiado)
-                nueva_solicitud.archivo.name = ruta_archivo
+                nombre_archivo_cambiado = cambiar_nombre_archivo(nombre_archivo_original)                
+                nueva_solicitud.archivo.name = nombre_archivo_cambiado
 
                 #Se envia el asunto al modelo IA para que nos retorne ID, si el ID es 0 quiere decir que la coincidencia es menor del 80%      
                 asunto = request.POST['asunto']
@@ -1085,7 +1089,7 @@ def limpiar_texto(texto):
 
 def pdf_view(request, nombre_del_pdf):
     ruta_archivos = 'pdfs/'
-    ruta_completa = os.path.join(ruta_archivos, nombre_del_pdf)
+    ruta_completa = os.path.join(settings.MEDIA_ROOT,ruta_archivos, nombre_del_pdf)
     print(ruta_archivos)
     with open(ruta_completa, 'rb') as pdf:
         pdf_data = pdf.read()
