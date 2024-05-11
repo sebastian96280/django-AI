@@ -320,8 +320,8 @@ def creaSolicitud(request):
             elif request.POST['id_nombre_formato'] == '2':
                 nombre_archivo_original = nueva_solicitud.archivo.name
                 nombre_archivo_cambiado = cambiar_nombre_archivo(nombre_archivo_original)
-                print(nombre_archivo_cambiado)
-                nueva_solicitud.archivo.name = nombre_archivo_cambiado
+                ruta_archivo = os.path.join('pdfs/', nombre_archivo_cambiado)
+                nueva_solicitud.archivo.name = ruta_archivo
 
                 #Se envia el asunto al modelo IA para que nos retorne ID, si el ID es 0 quiere decir que la coincidencia es menor del 80%      
                 asunto = request.POST['asunto']
