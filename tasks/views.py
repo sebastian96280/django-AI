@@ -288,7 +288,6 @@ def creaSolicitud(request):
                 # Crea un objeto de archivo PDF
                 nombre_archivo_cambiado = cambiar_nombre_archivo('nombre_archivo_original.pdf')
                 ruta_archivo = os.path.join('pdfs/', nombre_archivo_cambiado)
-                print(ruta_archivo)
                 # Crea el objeto PDF, usando la ruta del archivo como su "archivo"
                 p = canvas.Canvas(ruta_archivo, pagesize=letter)
 
