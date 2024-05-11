@@ -14,7 +14,7 @@ from django.db import IntegrityError
 from io import BytesIO
 from datetime import datetime
 import pytz
-
+from django.conf import settings
 
 # importar formulario y modelo(BD) de usuario extendido
 from .forms import usuarioExtForm
@@ -74,7 +74,6 @@ from pdf2image.exceptions import (
 )
 # modificación archivos alfanumericos
 import uuid
-from django.conf import settings
 
 # convertir imagenes a texto.
 from PIL import Image
@@ -1039,7 +1038,6 @@ def convertir_pdf_a_imagen(nombre_pdf, nombre_carpeta):
 
     print(output_folder)
 
-
     extraer_texto_imagenes(output_folder)
 
 # C:\Program Files\Tesseract-OCR
@@ -1086,18 +1084,21 @@ def limpiar_texto(texto):
 
 
 def pdf_view(request, nombre_del_pdf):
-    ruta_archivos = 'C:/Users/Trabajo/Desktop/Proyecto-Grado/pdfs'
+    ruta_archivos = 'pdfs'
     ruta_completa = os.path.join(ruta_archivos, nombre_del_pdf)
+    print(ruta_archivos)
     with open(ruta_completa, 'rb') as pdf:
         pdf_data = pdf.read()
     response = HttpResponse(pdf_data, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename={nombre_del_pdf}'
     return response
 
+
+
 # --------------------------------- Lector de PDF respuestas ---------------------------------------
 
 def pdf_view_res(request, nombre_del_pdf):
-    ruta_archivos = 'C:/Users/Trabajo/Desktop/Proyecto-Grado/respuestas/'
+    ruta_archivos = 'respuestas'
     ruta_completa = os.path.join(ruta_archivos, nombre_del_pdf)
     with open(ruta_completa, 'rb') as pdf:
         pdf_data = pdf.read()
