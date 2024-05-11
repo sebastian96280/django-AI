@@ -243,7 +243,7 @@ def creaSolicitud(request):
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                #dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
+                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
                 preparar_IA(ultimo_id)
 
@@ -278,7 +278,7 @@ def creaSolicitud(request):
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                #dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
+                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
                 preparar_IA(ultimo_id)        
             return render(request, 'crea_solicitud.html', {'form': tSolicitudForm(), 'confirmacion': 'Se ha recibido su solicitud. Pronto recibirá en su correo electrónico el número de radicado correspondiente, así como las instrucciones para consultar el estado de la misma.'})
