@@ -311,7 +311,7 @@ def creaSolicitud(request):
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
+                #dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
                 preparar_IA(ultimo_id)
 
@@ -346,7 +346,7 @@ def creaSolicitud(request):
                 nueva_solicitud.save()
 
                 ultimo_objeto = tSolicitud.objects.latest('id')
-                dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
+                #dividir_nombre_carpetaYarchivo(nombre_archivo_cambiado)
                 ultimo_id = ultimo_objeto.id
                 preparar_IA(ultimo_id)           
             
