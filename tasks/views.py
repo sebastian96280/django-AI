@@ -93,8 +93,9 @@ from .models import tSolicitud
 #ramdom de usuarios
 import random
 #requerir iniicio de sesión @login_required
-from django.contrib.auth.decorators import login_required
-
+from django.contrib.auth.decorators import login_required, user_passes_test
+def es_superusuario(user):
+    return user.is_superuser
 
 def error_404_view(request, exception):
     return render(request, '404.html')
@@ -120,6 +121,7 @@ def singnin(request):
 # -------------------------------------- Funciones de creación --------------------------------------
 
 @login_required
+@user_passes_test(es_superusuario)
 def crearUsuario(request):
     if request.method == 'GET':
         return render(request, 'crea_usuario.html', {
@@ -234,6 +236,7 @@ def creaSolicitud(request):
                 # Almacena el PDF
                 with open(ruta_archivo, 'rb') as f:
                     nueva_solicitud.archivo.save(nombre_archivo_cambiado, File(f))
+                os.remove(ruta_archivo)
                 id_ia = ejecutar_IA_Tipo_Solicitud(asunto)
                 if id_ia != 0:
                     id_tipo_solicitud = id_ia
@@ -935,7 +938,7 @@ def dividir_nombre_carpetaYarchivo(nombre_archivo):
 
 def crear_carpeta_nombre_pdf(nombre_carpeta, nombre_pdf):
     # Ruta de la nueva carpeta
-    ruta_nueva_carpeta = os.path.join('pdfs', nombre_carpeta)
+    ruta_nueva_carpeta = os.path.join(settings.MEDIA_ROOT,'pdfs/', nombre_carpeta)
     # Verificar si la carpeta ya existe
     if not os.path.exists(ruta_nueva_carpeta):
         # Crear la carpeta
@@ -945,9 +948,8 @@ def crear_carpeta_nombre_pdf(nombre_carpeta, nombre_pdf):
 
 def convertir_pdf_a_imagen(nombre_pdf, nombre_carpeta):
     # Construir las rutas del archivo y de la carpeta de salida
-    ruta_proyecto = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    pdf_path = os.path.join(ruta_proyecto, 'pdfs', nombre_pdf)
-    output_folder = os.path.join(ruta_proyecto, 'pdfs', nombre_carpeta)
+    pdf_path = os.path.join(settings.MEDIA_ROOT,'pdfs/', nombre_pdf)
+    output_folder = os.path.join(settings.MEDIA_ROOT,'pdfs/', nombre_carpeta)
 
     # Crear la carpeta de salida si no existe
     os.makedirs(output_folder, exist_ok=True)
@@ -1041,7 +1043,7 @@ def preparar_IA(ultimo_id):
     ultimo_objeto_almacenado.id_estado_solicitud = estado_solicitud
     ultimo_objeto_almacenado.save()   
 
-@login_required
+
 def ejecutar_IA_Tipo_Solicitud(asunto):
     modelo_svc = joblib.load('modelosIA/modelo_entrenado5.pkl')
     vectorizador_tfidf = joblib.load('modelosIA/vectorizador_tfidf5.pkl')
