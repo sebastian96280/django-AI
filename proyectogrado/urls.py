@@ -76,6 +76,9 @@ urlpatterns = [
 
     #IA
     path('ejecutar_IA/', views.ejecutar_IA_Tipo_Solicitud, name='ejecutar_IA'),
+    path('entrenar_IA/', views.entrenar_IA, name='entrenar_IA'),
+
+    
 
     #Configuración de correo
     path('editar_configuracion_correo/', views.editar_configuracion_correo, name='editar_configuracion_correo'),

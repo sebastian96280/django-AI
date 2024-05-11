@@ -122,7 +122,7 @@
               <div data-i18n="Basic">Solicitudes Cerradas</div>
             </a>
           </li>
-          <li class="menu-item {% if url_name == 'consultarSolicituds' %}active{% endif %}">
+          <li class="menu-item {% if url_name == 'consultarSolicitud' %}active{% endif %}">
             <a href="/consultarSolicitud/" class="menu-link">
               <i class="menu-icon tf-icons bx bx-calendar"></i>
               <div data-i18n="Basic">Todas las Solicitudes</div>
@@ -241,9 +241,15 @@
           <li class="menu-item {% if url_name == 'entrenar_IA' %}active{% endif %}">
             <a href="/ejecutar_IA/" class="menu-link">
               <i class="menu-icon tf-icons bx bx-shape-triangle"></i>
+              <div data-i18n="Basic">Ejecutar IA</div>
+            </a>
+          </li> 
+          <li class="menu-item {% if url_name == 'entrenar_IA' %}active{% endif %}">
+            <a href="/entrenar_IA/" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-shape-triangle"></i>
               <div data-i18n="Basic">Entrenar IA</div>
             </a>
-          </li>          
+          </li>         
         </ul>
         {% endif %}
       </aside>
@@ -254,7 +260,7 @@
       <div class="layout-page">
         <!-- Navbar -->
 
-        {% if user.is_authenticated %}
+        
         <nav
           class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
           id="layout-navbar">
@@ -268,7 +274,8 @@
 
               <!-- Place this tag where you want the button to render. -->
               
-              <!-- User--> 
+              <!-- User-->
+              {% if user.is_authenticated %} 
               <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                   <div class="avatar avatar-online">
@@ -312,12 +319,13 @@
                   </li>
                 </ul>
               </li>
+              {% else %}
+        {% endif %}
               <!--/ User -->              
             </ul>
           </div>          
         </nav>
-        {% else %}
-        {% endif %}
+        
 
         <!-- / Navbar -->
 

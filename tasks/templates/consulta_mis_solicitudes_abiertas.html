@@ -28,7 +28,6 @@
                         <th>Usuario</th>
                         <th>Fecha de radicación</th>
                         <th>Fecha de respuesta oportuna</th>
-                        <th>Respuesta</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -42,7 +41,7 @@
                             {{solicitud.nombre}} {{solicitud.apellidos}} </td>
                         <th>{{solicitud.correo}}</th>
                         <th>{{solicitud.asunto}}</th>
-                        <th><a href="{% url 'pdf_view' solicitud.archivo.name|slice:'5:' %}" target="_blank">Ver PDF</a></th>
+                        <td><a href="{% url 'pdf_view' solicitud.archivo.name|slice:'5:' %}" target="_blank">Ver PDF</a></td>
                         <th>{{solicitud.id_tipo_solicitud.nombre_solicitud}}</th>
                         <th>{{solicitud.id_area.nombre_area}}</th>
                         <th>{{solicitud.id_usuario}}</th>
@@ -53,8 +52,6 @@
                             <div class="dropdown">
                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="{% url 'modificar_solicitud_completa' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Modificar Solicitud</a>
-                                  <a class="dropdown-item" href="{% url 'editar_solicitud_area_tipo' solicitud.id %}"><i class="bx bx-edit-alt me-1"></i>Clasificar Solicitud</a>
                                   <a class="dropdown-item" href="{% url 'responder_solicitud' solicitud.id %}"><i class="bx bx-mail-send me-1"></i>Responder</a>
                                 </div>
                               </div>

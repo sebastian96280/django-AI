@@ -340,7 +340,7 @@ def consulta_solicitudes_sin_clasificar(request):
 @user_passes_test(es_superusuario)
 def consulta_solicitudes(request):
     solicitudes = tSolicitud.objects.all()
-    return render(request, 'consulta_solicitudes_abi_cerr.html', {
+    return render(request, 'consulta_solicitudes.html', {
         'solicitudes': solicitudes
     })
 
@@ -348,14 +348,14 @@ def consulta_solicitudes(request):
 @user_passes_test(es_superusuario)
 def consulta_solicitudes_cerradas(request):
     solicitudes = tSolicitud.objects.filter((~Q (id_area=None) & ~Q (id_tipo_solicitud=None)) & Q (id_esta_activo=2))
-    return render(request, 'consulta_solicitudes_abi_cerr.html', {
+    return render(request, 'consulta_solicitudes_cerradas.html', {
         'solicitudes': solicitudes
     })
 @login_required
 @user_passes_test(es_superusuario)
 def consulta_solicitudes_abiertas(request):
-    solicitudes = tSolicitud.objects.filter(id_esta_activo=1)
-    return render(request, 'consulta_solicitudes.html', {
+    solicitudes = tSolicitud.objects.filter((~Q (id_area=None) & ~Q (id_tipo_solicitud=None)) & Q (id_esta_activo=1))
+    return render(request, 'consulta_solicitudes_abiertas.html', {
         'solicitudes': solicitudes
     })
 
@@ -477,7 +477,7 @@ def correo_restablecmiento_contrasena(usuario_id, nueva_contrasena):
     email.fail_silently = False
     email.send()
 
-@login_required
+
 def correo_respuesta_solicitud(id_solicitud):
     usuario = tSolicitud.objects.get(pk=id_solicitud)
     radicado = usuario.id
@@ -690,8 +690,7 @@ def modificar_solicitud_completa(request, tipo_id):
                 'error': 'Error al actualizar tipos de documento'
             })
         
-@login_required
-@user_passes_test(es_superusuario)
+
 def modificar_solicitud_usuario(request, tipo_id):
     if request.method == 'GET':
         solicitud = get_object_or_404(tSolicitud, pk=tipo_id)
@@ -721,8 +720,7 @@ def modificar_solicitud_usuario(request, tipo_id):
                 'error': 'Error al actualizar tipos de documento'
             })
         
-@login_required
-@user_passes_test(es_superusuario)
+
 def asignar_usuario_aleatorio(area_id):
     # Obtén el objeto tArea correspondiente al id dado
     area = get_object_or_404(tArea, id=area_id)
@@ -755,7 +753,8 @@ def editar_solicitud_area_tipo(request, tipo_id):
             if form.is_valid():
                 nueva_solicitud = form.save(commit=False)
                 # Obtener el Id del area para despues ejecutar la función asignar solicitud, para asignar el usuario.
-                id_area=request.POST['id_area']
+                id_area=int(request.POST['id_area'])
+                print(id_area)
                 usuario = asignar_usuario_aleatorio(id_area)
                 nueva_solicitud.id_usuario = usuario
 
@@ -1149,7 +1148,7 @@ def entrenar_IA(request):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     # Ruta al archivo de texto con las stopwords en español
-    file_path = os.path.join(settings.BASE_DIR, r'C:\Users\Trabajo\Desktop\Proyecto-Grado\spanish.txt')
+    file_path = os.path.join(settings.STATICFILES_DIRS[0], 'spanish.txt')
     with open(file_path, "r", encoding="utf-8") as file:
         spanish_stop_words = file.read()
     # Crea el arreglo con las stopwords
@@ -1171,8 +1170,9 @@ def entrenar_IA(request):
 
     # Evaluando el modelo
     accuracy = accuracy_score(y_test, y_pred)
-    print(f'Accuracy: {accuracy*100}%')
+    return HttpResponse(f'Accuracy: {accuracy*100}%')
 
+    '''
     # Definiendo los parámetros para GridSearchCV
     paremetros = {'C':[1,4,8,16,32], 'kernel':['linear', 'rbf'], 'probability':[True]}
 
@@ -1191,6 +1191,7 @@ def entrenar_IA(request):
     # Guarda el modelo en un archivo
     ruta_modelo = os.path.join(settings.STATIC_URL, 'modelo_entrenado.pkl')
     joblib.dump(svc_grid, ruta_modelo)
+    '''
 
 def read_stopwords_from_file(file_path):
     try:

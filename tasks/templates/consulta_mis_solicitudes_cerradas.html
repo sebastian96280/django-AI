@@ -30,7 +30,6 @@
                         <th>Fecha de respuesta oportuna</th>
                         <th>Fecha de respuesta</th>
                         <th>Respuesta</th>
-                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,14 +54,6 @@
                         {% else %}
                         <td>Respuesta pendiente por generar</td>
                         {% endif %}
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="bx bx-dots-vertical-rounded"></i></button>
-                                <div class="dropdown-menu">
-                                  <a class="dropdown-item" href="{% url 'activar_solicitud' solicitud.id %}"><i class="bx bxs-user-circle me-1"></i>{{solicitud.id_esta_activo|yesno:'Re Abrir Solicitud,Desactivar'}}</a>
-                                </div>
-                              </div>
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
