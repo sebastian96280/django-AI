@@ -66,7 +66,8 @@ import uuid
 # convertir imagenes a texto.
 from PIL import Image
 import pytesseract
-
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+os.environ['TESSDATA_PREFIX'] = r'C:\Program Files\Tesseract-OCR\tessdata'
 
 
 #Ejecución de IA
@@ -964,8 +965,43 @@ def convertir_pdf_a_imagen(nombre_pdf, nombre_carpeta):
 
     extraer_texto_imagenes(output_folder)
 
-# C:\Program Files\Tesseract-OCR
+import requests
 def extraer_texto_imagenes(carpeta_imagenes):
+    # Obtener una lista de todas las imágenes en la carpeta
+    nombres_imagenes = os.listdir(carpeta_imagenes)
+
+    # Crear un archivo de texto para almacenar el texto extraído
+    ruta_archivo = os.path.join(
+        'pdfs', carpeta_imagenes, carpeta_imagenes + '.txt')
+    with open(ruta_archivo, 'w') as f:
+        # Recorrer todas las imágenes
+        for nombre_imagen in nombres_imagenes:
+            # Abrir la imagen
+            imagen_path = os.path.join(carpeta_imagenes, nombre_imagen)
+
+            # Extraer el texto de la imagen con OCR.space API
+            with open(imagen_path, 'rb') as img_file:
+                response = requests.post(
+                    'https://api.ocr.space/parse/image',
+                    files={'imagen': img_file},
+                    data={'apikey': 'K83281714188957', 'language': 'spa'}
+                )
+                result = response.json()
+                if result['IsErroredOnProcessing']:
+                    print(f"Error al procesar la imagen {nombre_imagen}: {result['ErrorMessage']}")
+                    continue
+
+                texto = result['ParsedResults'][0]['ParsedText']
+                texto = limpiar_texto(texto)
+
+                # Escribir el texto en el archivo
+                f.write(texto + '\n\n')
+
+    # Eliminar la carpeta
+    shutil.rmtree(carpeta_imagenes)
+
+# C:\Program Files\Tesseract-OCR
+def extraer_texto_imagenes2(carpeta_imagenes):
     # Obtener una lista de todas las imágenes en la carpeta
     nombres_imagenes = os.listdir(carpeta_imagenes)
 
