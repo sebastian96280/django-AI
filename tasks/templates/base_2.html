@@ -74,22 +74,8 @@
         <div class="menu-inner-shadow"></div>
 
         <ul class="menu-inner py-1">
-          <!-- Dashboards -->
-          <!-- Texto Components -->
-          <li class="menu-header small text-uppercase"><span class="menu-header-text">Radiciación de Solicitudes</span>
-          </li>
-          <li class="menu-item {% if url_name == 'creaSolicitud' %}active{% endif %}">
-            <a href="/" class="menu-link">
-              <i class="menu-icon tf-icons bx bxs-edit-alt"></i>
-              <div data-i18n="Basic">Radicar Solicitud</div>
-            </a>
-          </li>
-          <li class="menu-item {% if url_name == 'consultar_radicados' %}active{% endif %}">
-            <a href="/consultarRadicado/" class="menu-link">
-              <i class="menu-icon tf-icons bx bx-search-alt"></i>
-              <div data-i18n="Basic">Consultar Radicado</div>
-            </a>
-          </li>
+          
+          {% if user.is_authenticated %}
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Consultar Mis Solicitudes</span>
           <li class="menu-item {% if url_name == 'consulta_mis_solicitudes' %}active{% endif %}">
             <a href="/consulta_mis_solicitudes/" class="menu-link">
@@ -114,7 +100,9 @@
               <i class="menu-icon tf-icons bx bx-calendar-alt"></i>
               <div data-i18n="Basic">Solicitudes de Mi Area</div>
             </a>
-          </li>          
+          </li>
+            {% if user.is_superuser %}         
+
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Consultar Solicitudes</span></li>
           <li class="menu-item {% if url_name == 'consulta_solicitudes_sin_clasificar' %}active{% endif %}">
             <a href="/consulta_solicitudes_sin_clasificar/" class="menu-link">
@@ -140,6 +128,27 @@
               <div data-i18n="Basic">Todas las Solicitudes</div>
             </a>
           </li>
+            {% endif %} 
+          {% else %}
+          <!-- Dashboards -->
+          <!-- Texto Components -->
+          <li class="menu-header small text-uppercase"><span class="menu-header-text">Radiciación de Solicitudes</span>
+          </li>
+          <li class="menu-item {% if url_name == 'creaSolicitud' %}active{% endif %}">
+            <a href="/" class="menu-link">
+              <i class="menu-icon tf-icons bx bxs-edit-alt"></i>
+              <div data-i18n="Basic">Radicar Solicitud</div>
+            </a>
+          </li>
+          <li class="menu-item {% if url_name == 'consultar_radicados' %}active{% endif %}">
+            <a href="/consultarRadicado/" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-search-alt"></i>
+              <div data-i18n="Basic">Consultar Radicado</div>
+            </a>
+          </li>
+          {% endif %} 
+          {% if user.is_authenticated %}
+          {% else %}          
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Usuario</span></li>
           <li class="menu-item {% if url_name == 'signin' %}active{% endif %}">
             <a href="/signin/" class="menu-link">
@@ -147,6 +156,8 @@
               <div data-i18n="Basic">Iniciar Sesión</div>
             </a>
           </li>
+          {% endif %}
+          {% if user.is_authenticated and user.is_superuser %}          
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Administración</span></li>
           <li class="menu-item">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
@@ -234,6 +245,7 @@
             </a>
           </li>          
         </ul>
+        {% endif %}
       </aside>
       {% endwith %}
       <!-- / Menu -->
@@ -242,6 +254,7 @@
       <div class="layout-page">
         <!-- Navbar -->
 
+        {% if user.is_authenticated %}
         <nav
           class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
           id="layout-navbar">
@@ -249,12 +262,12 @@
             <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
               <i class="bx bx-menu bx-sm"></i>
             </a>
-          </div>
-
+          </div>          
           <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
             <ul class="navbar-nav flex-row align-items-center ms-auto">
 
               <!-- Place this tag where you want the button to render. -->
+              
               <!-- User--> 
               <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
@@ -299,10 +312,12 @@
                   </li>
                 </ul>
               </li>
-              <!--/ User -->
+              <!--/ User -->              
             </ul>
-          </div>
+          </div>          
         </nav>
+        {% else %}
+        {% endif %}
 
         <!-- / Navbar -->
 
